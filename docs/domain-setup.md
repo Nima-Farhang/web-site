@@ -1,6 +1,6 @@
 # www.farhang.io setup
 
-The public hostname is `www.farhang.io`, attached to prod. Keep registration and DNS at Squarespace. The root `farhang.io` is not part of this change and does not automatically redirect to www.
+The planned public hostname is `www.farhang.io`, targeting prod. Test and prod hosting were destroyed at the user's request on 2026-11-10; see the [deployment record](deployments.md). The domain is not live on AWS yet. Keep registration and DNS at Squarespace. The root `farhang.io` is not part of this change and does not automatically redirect to www.
 
 ## Current blocker
 

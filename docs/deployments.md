@@ -28,3 +28,18 @@ Local verification also passed Terraform validation and formatting, six deployme
 The user selected www.farhang.io for prod and supplied Squarespace DNS records. Terraform validation and a certificate-only saved plan passed (1 certificate to add). Apply failed on `acm:RequestCertificate` because identity policy `restrict-to-sydney-region` explicitly denies ACM requests in us-east-1. Read-only inspection confirmed that policy's region restriction. No certificate, prod hosting resources, or DNS records were created during this attempt; no IAM policies were modified.
 
 The existing dev resources were checked with a live plan: only the newly added outputs were proposed, with no resource changes. The code and [domain instructions](domain-setup.md) are prepared, but connection remains blocked on the IAM exception and then external DNS validation. Local Terraform validation, workflow linting, and all 13 deployment-script tests passed.
+
+## Test and prod teardown — 2026-11-10
+
+At the user's request, ran `scripts/destroy_environment.sh test` and `scripts/destroy_environment.sh prod`, supplying each script's exact typed confirmation. Both targets had resources; this was not an empty-state cleanup. Each script applied its targeted bucket-deletion preparation and then its saved destroy plan.
+
+| Environment | Resources destroyed | Removed bucket | Removed CloudFront distribution |
+| --- | --- | --- | --- |
+| Test | 8 | `personal-website-test-210006516097` | `E1W3LEXXE6L1S1` |
+| Prod | 8 | `personal-website-prod-210006516097` | `E2E71BZA0MIV8C` |
+
+Both scripts exited successfully. Subsequent Terraform state listings were empty. AWS returned 404 for both website buckets and NoSuchDistribution for both CloudFront IDs. The scripts also deleted their origin access controls and remaining bucket configuration resources. Website object versions were removed as required by bucket deletion; remote state and history remain in the shared backend.
+
+Verified that dev distribution `E2H4XFCUBL35SI` remains enabled and Deployed, the existing shared state bucket is accessible, and `terraform-state-lock` remains ACTIVE. No dev teardown, DNS change, IAM change, or certificate creation was performed.
+
+Before teardown, GitHub showed no queued or in-progress runs and showed completed successful [Terraform](https://github.com/Nima-Farhang/web-site/actions/runs/42775177797) and [Website](https://github.com/Nima-Farhang/web-site/actions/runs/42774546479) workflows. This confirms workflows had run; it does not attribute each environment's resources to a particular run. Test and prod hosting are now absent and must be explicitly redeployed when needed. The previously documented ACM region-policy restriction still needs resolution before setting up www.farhang.io.

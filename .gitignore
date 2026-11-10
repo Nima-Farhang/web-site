@@ -1,0 +1,44 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Node / website
+node_modules/
+dist/
+coverage/
+.vite/
+*.tsbuildinfo
+
+# Environment / credentials
+.env
+.env.*
+!.env.example
+.aws/
+*.secret
+*.key
+*.pem
+
+# Terraform generated files and local configuration
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.plan
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+*.local.tfvars
+*.local.tfvars.json
+*.local.hcl
+# Commit .terraform.lock.hcl files for reproducible provider installation.
+
+# Logs / temporary files
+*.log
+tmp/
+temp/
+*.tmp

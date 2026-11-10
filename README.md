@@ -18,8 +18,8 @@ The repository includes a minimal React frontend, Terraform hosting using an exi
 Browser → HTTPS / CloudFront → private S3 website bucket
 
 GitHub Actions
-├── Website pipeline: build once → deploy test → deploy prod
-└── Terraform pipeline: validate → plan/apply test → plan/apply prod
+├── Website pipeline: select environment → build → deploy and verify target
+└── Terraform pipeline: select environment → validate → plan/apply target
 ```
 
 The initial website is frontend-only. `website/backend/` is reserved for future AWS Lambda processes; no backend is implemented yet. CloudFront will provide HTTPS in front of a private S3 bucket using origin access control. A custom domain, Route 53 records, and an ACM certificate can be added when the domain is decided; CloudFront's default hostname is sufficient to start.
@@ -88,28 +88,26 @@ Do not commit credentials or put them in the Docker image. A separate AWS accoun
 
 ## Environments and delivery
 
-Use the existing `master` branch for solo development. No additional branching strategy is required. There are three AWS environments: `dev`, `test`, and `prod`. Deploy `dev` manually for AWS development checks; CI continues to promote `test` then `prod`. The Codespace is the local development environment.
+Work directly on `master` as the sole developer. There are three AWS environments: `dev`, `test`, and `prod`; the Codespace provides local development separately.
 
-The pipelines are:
+Both deployment pipelines are manual-only. In **GitHub → Actions**, select **Terraform** or **Website**, click **Run workflow**, choose branch `master`, select `dev`, `test`, or `prod`, then click **Run workflow** again. Each run deploys only the selected environment. Pushes do not trigger workflows, and no automatic test-to-prod promotion occurs.
 
-| Pipeline | Responsibility | Promotion |
-| --- | --- | --- |
-| Website | Type-check, build the static site, upload to S3, invalidate CloudFront | Deploy to test, verify it, then deploy the same build artifact to prod |
-| Terraform | Format-check, validate, plan and apply AWS infrastructure | Apply test successfully before planning and applying prod |
+| Pipeline | Behavior |
+| --- | --- |
+| Terraform | Check formatting, validate, plan, and apply the selected environment |
+| Website | Type-check, build, upload to the selected environment, invalidate CloudFront, and verify the deployed release |
 
-Both pipelines run on relevant changes to `master` and support manual dispatch. Terraform and website releases remain separate: provision infrastructure first, then deploy website assets. Each environment has its own website bucket, CloudFront distribution, and Terraform state key. The existing shared S3 state bucket and DynamoDB lock table are used by both pipelines; this repository does not provision them.
+### First deployment through Actions
 
-Both workflows share one concurrency group, preventing infrastructure and website releases from overlapping. GitHub can replace an older pending run with a newer one; this is not a FIFO release queue. Test always completes before prod within a run.
+1. Create GitHub environments `dev`, `test`, and `prod` under Settings → Environments. Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to each environment's secrets. `AWS_SESSION_TOKEN` is optional for temporary credentials. Codespaces secrets are separate.
+2. Run **Terraform** for the desired environment and wait for completion.
+3. Run **Website** for the same environment and desired commit on `master`.
 
-### First deployment
+The workflow files must be pushed to GitHub's default branch before the new controls appear. The repository change itself does not push or start a deployment.
 
-1. Create GitHub environments named `test` and `prod` under repository Settings → Environments. Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` as environment secrets in each. Codespaces secrets are separate and are not available to Actions. `AWS_SESSION_TOKEN` is optional for temporary credentials.
-2. Run the **Terraform** workflow manually on `master` and wait for both deployments.
-3. Run the **Website** workflow manually on `master` to deploy and verify both sites.
+Both workflows share a concurrency group per environment, preventing infrastructure/content releases from overlapping for the same target. Different environments can run independently. GitHub may replace older pending runs; this is not a FIFO queue. When changes depend on infrastructure, run Terraform before Website. Testing a revision in test before manually selecting prod remains recommended, but is not enforced by a promotion job.
 
-Configuration targets AWS account `210006516097`, region `ap-southeast-2`. These non-secret settings are committed in Terraform environment files and checked by the workflows. Change them consistently if moving accounts or regions. Required AWS permissions and script details are documented in [terraform/README.md](terraform/README.md).
-
-On a first push that changes both layers, the website workflow may run before infrastructure exists. Complete Terraform and rerun Website if that happens. Later deployments also use this order when website changes depend on new infrastructure.
+Configuration targets account `210006516097`, region `ap-southeast-2`. The existing shared backend is reused with separate state keys. See [pipeline instructions](.github/workflows/README.md) and [Terraform permissions](terraform/README.md).
 
 ## Teardown
 

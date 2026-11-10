@@ -9,7 +9,7 @@ From the repository root:
 ./scripts/dev_website.sh
 ```
 
-The build script installs locked dependencies, checks TypeScript, produces `website/frontend/dist/`, and writes a public `release.json` containing the commit SHA. CI builds once and deploys the same artifact to test and prod. The development script binds to `0.0.0.0:5173` for Codespaces; run the build script or `npm ci` first to install dependencies.
+The build script installs locked dependencies, checks TypeScript, produces `website/frontend/dist/`, and writes a public `release.json` containing the commit SHA. Each manual Website workflow run builds an artifact and deploys it to the selected dev, test, or prod environment. The development script binds to `0.0.0.0:5173` for Codespaces; run the build script or `npm ci` first to install dependencies.
 
 From this directory you can also use `npm run dev`, `npm run typecheck`, `npm run build`, and `npm run preview`.
 

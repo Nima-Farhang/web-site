@@ -1,14 +1,22 @@
 # Deployment pipelines
 
-Two workflows run on relevant pushes to `master` and support manual dispatch:
+Both workflows follow Data Platform Demo's `workflow_dispatch` pattern. They have no push, pull-request, scheduled, or chained-workflow triggers.
 
-- `terraform.yml`: formatting and backend-free validation, then saved-plan apply to test, then prod.
-- `website.yml`: type-check and build once, upload a versioned artifact, then deploy and verify the same artifact in test and prod.
+## Run a deployment
 
-Dev is available through local deployment scripts and is not added to CI promotion. Only `master` can deploy through these workflows, including manually triggered runs. Both workflows use the shared `aws-website-release` concurrency group with cancellation of active runs disabled. GitHub may replace pending runs with newer ones. The two workflows do not impose ordering on each other: run Terraform before Website for the first deployment or whenever content depends on infrastructure changes.
+1. Push the workflow files to the repository's default branch so GitHub can show the controls.
+2. Open GitHub → Actions → **Terraform** or **Website**.
+3. Click **Run workflow**, select branch `master`, and choose `dev`, `test`, or `prod` from the **environment** dropdown (default: `dev`).
+4. Click **Run workflow** to start the selected deployment.
 
-Create GitHub environments `test` and `prod`. Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to each environment's secrets; optionally add `AWS_SESSION_TOKEN` for temporary credentials. Environment protection rules are optional and may be configured in GitHub. Without protection rules, successful test deployment promotes automatically to prod.
+Each run targets one environment only. Terraform validates and applies a saved plan for that target. Website builds one artifact, deploys it to that target, and checks the deployed HTML and release marker. There is no automatic test-to-prod promotion or automatic trigger when code is committed or pushed. Deployments from other branches are skipped by the existing master guard.
 
-The workflows target account `210006516097` in `ap-southeast-2`, matching the Terraform configuration. They use the existing key-based approach from Data Product Demo. Keys must have the permissions described in `terraform/README.md`. No secrets are embedded in the workflows.
+Create GitHub environments `dev`, `test`, and `prod`; configure `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in each environment's secrets. `AWS_SESSION_TOKEN` is optional for temporary credentials. Codespaces secrets are separate. GitHub environment protection rules remain optional.
 
-The existing S3 state bucket and DynamoDB lock table are configured in `terraform/backend.tf`; the pipelines do not create or manage them. Site targets come from Terraform outputs, so bucket names and CloudFront IDs are not duplicated as workflow secrets. Saved plans stay on their job runner and are applied directly; they are not uploaded as artifacts. Frontend artifacts are retained for seven days.
+The selected input controls the job's GitHub environment, AWS secrets, script environment argument, Terraform backend key, and concurrency group. Both workflows use `aws-website-release-<environment>` so infrastructure and content releases to the same target cannot overlap, while different targets can run independently. GitHub may replace pending runs with newer ones.
+
+Run Terraform before Website when creating a target or introducing infrastructure-dependent changes. Test a revision in test before manually deploying that revision to prod; the workflows do not enforce cross-run promotion or guarantee matching artifacts between separate runs.
+
+The workflows target account `210006516097` in `ap-southeast-2` and reuse the existing shared state bucket and DynamoDB table. Website targets come from Terraform outputs. Saved plans remain on the job runner; frontend artifacts are retained for seven days. These workflows do not destroy resources.
+
+See [ADR 0010](../../docs/adr/0010-manual-environment-deployments.md).

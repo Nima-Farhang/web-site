@@ -32,7 +32,7 @@ The backend resources are managed elsewhere. This repository neither creates nor
 
 ## Deployment
 
-Run `./scripts/validate_terraform.sh`. Deploy dev manually with `./scripts/deploy_environment.sh dev`. For CI promotion, deploy test with `./scripts/deploy_environment.sh test` and prod with `./scripts/deploy_environment.sh prod`. The script initializes the selected backend, validates, saves a plan, and applies that exact plan after typed confirmation. CI uses the same script with `APPLY_APPROVE=true`. Separate local data directories prevent environment switching from reusing the wrong backend metadata.
+Run `./scripts/validate_terraform.sh`. Deploy dev manually with `./scripts/deploy_environment.sh dev`. For other targets, deploy test with `./scripts/deploy_environment.sh test` and prod with `./scripts/deploy_environment.sh prod`. The script initializes the selected backend, validates, saves a plan, and applies that exact plan after typed confirmation. CI uses the same script with `APPLY_APPROVE=true`. Separate local data directories prevent environment switching from reusing the wrong backend metadata.
 
 Terraform is pinned to `1.9.6`, matching the container and workflows. The AWS provider uses `~> 5.0` with a committed lock file. DynamoDB provides state locking for this Terraform version.
 

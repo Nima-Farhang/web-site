@@ -10,7 +10,7 @@ Keep the hosting architecture simple. NAT gateways and dependencies on them are 
 
 The current setup follows Data Product Demo's key-based AWS authentication. Codespaces uses `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`; temporary credentials also need `AWS_SESSION_TOKEN`. Initialization writes the default AWS profile under the user's home with file permissions `0600` and does not print values. Frontend work can proceed without credentials.
 
-GitHub Actions has separate credentials in the `test` and `prod` environment secrets. Codespaces secrets are not available to Actions. Credentials, state, plans, and secret values must never be committed, logged, embedded in images, or copied into frontend configuration. A static build and its `release.json` are public.
+GitHub Actions has separate credentials in the `dev`, `test`, and `prod` environment secrets. Codespaces secrets are not available to Actions. Credentials, state, plans, and secret values must never be committed, logged, embedded in images, or copied into frontend configuration. A static build and its `release.json` are public.
 
 The provider, backend, and workflows check the intended account. Authentication success does not establish that an identity has all deployment permissions. Read the [Terraform permissions](../terraform/README.md) before deployment. Switching to OIDC or adding IAM resources is a separate decision.
 
@@ -18,7 +18,7 @@ The provider, backend, and workflows check the intended account. Authentication 
 
 Website buckets block public access, enforce bucket ownership, enable encryption and versioning, and deny insecure transport. Bucket policies permit reads through their specific CloudFront distribution. CloudFront signs origin requests and redirects viewers to HTTPS.
 
-Website deployment retains old assets and object versions; normal configuration does not force-empty buckets. The explicit [destroy script](../scripts/README.md#destroy-an-environment) enables bucket deletion after typed confirmation and permanently removes all website object versions. The shared backend is preserved. Retention cleanup and automatic rollback are not currently implemented. A failed verification prevents promotion but does not undo already uploaded objects.
+Website deployment retains old assets and object versions; normal configuration does not force-empty buckets. The explicit [destroy script](../scripts/README.md#destroy-an-environment) enables bucket deletion after typed confirmation and permanently removes all website object versions. The shared backend is preserved. Retention cleanup and automatic rollback are not currently implemented. A failed verification fails the selected deployment but does not undo already uploaded objects.
 
 ## Shared state boundary
 

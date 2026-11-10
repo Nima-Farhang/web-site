@@ -37,6 +37,6 @@ Terraform owns hosting resources; the website pipeline owns uploaded site object
 
 ## Delivery
 
-The website pipeline checks types, builds once, deploys to test, checks the deployed HTML and release marker, then promotes the same artifact to prod. Terraform validates and applies a saved plan to test before planning and applying prod. Both workflows share a concurrency group but do not establish ordering between one another; deploy infrastructure first when content depends on it.
+Both pipelines start only from GitHub's Run workflow control with a dev/test/prod dropdown. Website checks types, builds an artifact, deploys it to the selected target, and verifies its HTML and release marker. Terraform validates and applies a saved plan for the selected target. There is no automatic promotion or push trigger. Both workflows share a concurrency group per environment; run infrastructure first when content depends on it.
 
 See [environment strategy](environment-strategy.md), [pipeline operations](../.github/workflows/README.md), and the [accepted decisions](adr/README.md).

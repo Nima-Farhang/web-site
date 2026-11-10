@@ -16,7 +16,7 @@ From the repository root:
 ./scripts/deploy_environment.sh dev
 ```
 
-Dev is manually deployed and uses its own backend key. It does not change the test → prod CI sequence.
+Dev is manually deployed and uses its own backend key. It can also be selected in the manual Terraform workflow dropdown.
 
 ## Test init / plan
 
@@ -45,7 +45,7 @@ From the repository root, deploy test before prod:
 ./scripts/deploy_environment.sh prod
 ```
 
-The scripts isolate backend metadata by environment, show a saved plan, and request typed confirmation before applying it. GitHub Actions calls these same scripts with `APPLY_APPROVE=true` after the preceding stage succeeds.
+The scripts isolate backend metadata by environment, show a saved plan, and request typed confirmation before applying it. GitHub Actions calls these same scripts with `APPLY_APPROVE=true` for the selected dropdown environment after validation succeeds.
 
 ## Destroy one environment
 

@@ -16,7 +16,7 @@ GitHub Actions
 └── Terraform pipeline: validate → plan/apply test → plan/apply prod
 ```
 
-There is no backend, database, or server-side application. CloudFront will provide HTTPS in front of a private S3 bucket using origin access control. A custom domain, Route 53 records, and an ACM certificate can be added when the domain is decided; CloudFront's default hostname is sufficient to start.
+The initial website is frontend-only. `website/backend/` is reserved for future AWS Lambda processes; no backend is implemented yet. CloudFront will provide HTTPS in front of a private S3 bucket using origin access control. A custom domain, Route 53 records, and an ACM certificate can be added when the domain is decided; CloudFront's default hostname is sufficient to start.
 
 ## Repository structure
 
@@ -25,13 +25,15 @@ There is no backend, database, or server-side application. CloudFront will provi
 .github/workflows/           Website and Terraform pipeline definitions (planned)
 docs/                       Architecture and development conventions
 scripts/                    Repeatable local and CI commands
-website/                    Static React and TypeScript application
-  public/                   Files copied directly into the site build
-  src/
-    assets/                 Imported images and other assets
-    components/             Reusable React components
-    content/                Personal introduction and project content
-    styles/                 Shared styles
+website/                    Website application code
+  frontend/                 Static React and TypeScript application
+    public/                 Files copied directly into the site build
+    src/
+      assets/               Imported images and other assets
+      components/           Reusable React components
+      content/              Personal introduction and project content
+      styles/               Shared styles
+  backend/                  Reserved for future AWS Lambda processes
 terraform/                  Shared Terraform root configuration (planned)
   bootstrap/                Remote-state foundation
   environments/
@@ -44,8 +46,8 @@ terraform/                  Shared Terraform root configuration (planned)
 
 1. Create a Codespace for this repository, or run **Codespaces: Rebuild Container** in an existing Codespace.
 2. The container provides Node.js 22 with npm, Terraform 1.9.6, AWS CLI v2, Git, ripgrep, and ShellCheck.
-3. Initialization configures AWS if credentials are available. Website dependencies will be installed with `npm ci` once `website/package-lock.json` exists.
-4. Follow [website/README.md](website/README.md) for the frontend implementation plan.
+3. Initialization configures AWS if credentials are available. Frontend dependencies will be installed with `npm ci` once `website/frontend/package-lock.json` exists.
+4. Follow [website/README.md](website/README.md) for the application layout and [website/frontend/README.md](website/frontend/README.md) for the frontend implementation plan.
 
 Port `5173` is forwarded for the future Vite development server. Run that server with `--host 0.0.0.0` so the Codespaces forwarded port can reach it.
 

@@ -43,3 +43,18 @@ Both scripts exited successfully. Subsequent Terraform state listings were empty
 Verified that dev distribution `E2H4XFCUBL35SI` remains enabled and Deployed, the existing shared state bucket is accessible, and `terraform-state-lock` remains ACTIVE. No dev teardown, DNS change, IAM change, or certificate creation was performed.
 
 Before teardown, GitHub showed no queued or in-progress runs and showed completed successful [Terraform](https://github.com/Nima-Farhang/web-site/actions/runs/42775177797) and [Website](https://github.com/Nima-Farhang/web-site/actions/runs/42774546479) workflows. This confirms workflows had run; it does not attribute each environment's resources to a particular run. Test and prod hosting are now absent and must be explicitly redeployed when needed. The previously documented ACM region-policy restriction still needs resolution before setting up www.farhang.io.
+
+## First portfolio draft on dev — 2026-11-10
+
+At the user's request, built the first single-page portfolio and deployed it using `scripts/deploy_website.sh dev` with Codespaces AWS credentials. The local source commit deployed was `3ddf43e8d642177dccad43c22314a24830be83b7`.
+
+- Live URL: https://d3j2k1nh9scjof.cloudfront.net
+- Existing website bucket: `personal-website-dev-210006516097`.
+- Existing CloudFront distribution: `E2H4XFCUBL35SI`.
+- Content: introduction and five public repository summaries, with the navy/teal Lux CSS template from Full-Stack-WebApp-Demo.
+
+The script uploaded assets before HTML, completed CloudFront invalidation, and byte-compared the deployed HTML and release marker against the build. The public release marker returned the source commit above. Live CSS and JavaScript also matched the production build exactly. Local and live browser checks passed at 1440, 768, 390, and 320 pixel widths, with no horizontal overflow or runtime errors; project links and section navigation were checked. TypeScript/production build, workflow linting, workflow target checks, all 13 deployment-script tests, and documentation link checks passed.
+
+No Terraform apply or new infrastructure was needed. Test and prod remain destroyed; domain DNS, ACM restrictions, and www.farhang.io were not changed.
+
+Website automation is configured in the local repository to build and deploy dev on every push to master, while retaining manual target selection. Terraform stays manual-only. The initial draft was deployed directly through the shared scripts, not through an Actions run. The commits have not been pushed by this task, so the new automatic trigger becomes active only when pushed to GitHub; the GitHub dev environment must contain its AWS secrets. See [ADR 0012](adr/0012-first-portfolio-and-automatic-dev-delivery.md).

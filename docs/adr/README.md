@@ -14,3 +14,4 @@ Use [the template](template.md) for new records. Number records sequentially wit
 | [0006](0006-document-decisions-and-commit-changes.md) | Accepted | Document decisions and commit changes |
 | [0007](0007-add-dev-environment.md) | Accepted | Add dev environment |
 | [0008](0008-environment-teardown.md) | Accepted | Environment teardown |
+| [0009](0009-minimal-portfolio-infrastructure.md) | Accepted | Minimal portfolio infrastructure; no NAT gateways |

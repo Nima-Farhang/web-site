@@ -2,6 +2,10 @@
 
 A single Terraform root provisions the website's private S3 bucket and HTTPS CloudFront distribution in dev, test, and prod. The flat structure follows [Data Product Demo](https://github.com/Nima-Farhang/Data-Product-Demo/tree/master/TERRAFORM). Resources are defined directly in `main.tf`; there are no modules or bootstrap resources.
 
+## Scope constraint
+
+Provision only what this static personal promotion and sample-work website needs. Do not add or connect to NAT gateways, VPC networking, compute resources, databases, or customer-data services. Sample projects are showcased through static content and links. The shared backend remains externally managed. Future backend implementation requires an explicit user scope decision; see [ADR 0009](../docs/adr/0009-minimal-portfolio-infrastructure.md).
+
 ## Files
 
 | File | Purpose |

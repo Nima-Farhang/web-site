@@ -12,6 +12,12 @@ Keep Terraform resources directly in `terraform/main.tf`, inputs in `variables.t
 
 Use two-space indentation for frontend, shell, HCL, JSON, and YAML; Python uses four spaces. Use UTF-8, LF endings, and a final newline. Follow `.editorconfig` and `terraform fmt`. Do not reformat unrelated files during a focused change.
 
+## Infrastructure simplicity
+
+Choose the smallest infrastructure change that supports the static portfolio. Keep S3/CloudFront hosting and the existing external Terraform backend as the baseline. Do not introduce platform components just because a reference repository contains them. Never add or connect to a NAT gateway under the current scope.
+
+Keep sample work as public static content or links. Do not add customer-data handling, live compute integrations, VPC networking, servers, containers, or databases. The reserved backend folder does not authorize Lambda deployment. Broader capabilities require a new explicit user decision recorded before implementation; see [ADR 0009](adr/0009-minimal-portfolio-infrastructure.md).
+
 ## Naming
 
 | Item | Convention | Example |

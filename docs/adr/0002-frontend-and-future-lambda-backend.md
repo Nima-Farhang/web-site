@@ -28,3 +28,4 @@ Frontend build/deployment stays independent of backend dependencies. Add backend
 
 - [Application layout](../../website/README.md)
 - [Backend reservation](../../website/backend/README.md)
+- [Scope clarification: minimal portfolio infrastructure](0009-minimal-portfolio-infrastructure.md)

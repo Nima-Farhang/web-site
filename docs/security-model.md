@@ -1,5 +1,11 @@
 # Security model
 
+## Data and infrastructure scope
+
+This website publishes personal promotional content and public sample work. It does not collect, store, or process customer data and does not connect to compute resources to run sample workloads. Use static content and links for the portfolio.
+
+Keep the hosting architecture simple. NAT gateways and dependencies on them are prohibited under the current scope; VPC networking, compute services, and databases are outside it. The backend folder is reserved only, and a future Lambda implementation needs an explicit scope decision. See [ADR 0009](adr/0009-minimal-portfolio-infrastructure.md).
+
 ## Credentials
 
 The current setup follows Data Product Demo's key-based AWS authentication. Codespaces uses `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`; temporary credentials also need `AWS_SESSION_TOKEN`. Initialization writes the default AWS profile under the user's home with file permissions `0600` and does not print values. Frontend work can proceed without credentials.

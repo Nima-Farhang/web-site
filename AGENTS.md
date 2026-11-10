@@ -4,8 +4,9 @@ Read this file and `docs/README.md` before changing this repository. Follow `doc
 
 ## Project boundaries
 
-- Keep this a small personal website with React and TypeScript in `website/frontend/`.
-- Reserve `website/backend/` for future AWS Lambda processes; add backend implementation only when requested.
+- Keep this a small personal self-promotion and portfolio website with React and TypeScript in `website/frontend/`. Publish personal introductions and sample work only; do not collect, store, or process customer data.
+- Keep infrastructure minimal: static S3/CloudFront hosting and the existing external Terraform backend. Do not create, attach, or depend on a NAT gateway. Do not add VPC networking, servers, containers, databases, or connections to compute resources for portfolio examples. Showcase examples with static content and links. Any future expansion requires an explicit user scope decision.
+- Keep `website/backend/` as a reserved folder only. The earlier Lambda idea does not authorize provisioning compute; implement it only after an explicit user decision to expand the static-site scope.
 - Keep Terraform flat under `terraform/`, following Data Product Demo. Resources go directly in `main.tf`; do not introduce modules or bootstrap infrastructure without a new decision.
 - Use the existing shared S3/DynamoDB backend. Never provision or destroy the shared backend from this repository.
 - Support `dev`, `test`, and `prod`; CI promotes `test` then `prod`, while `dev` is deployed manually; work directly on `master` without introducing a branching strategy.

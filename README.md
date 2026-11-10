@@ -2,6 +2,12 @@
 
 A small personal website introducing Nima Farhang, built as a static React and TypeScript application. This repository will contain the website, AWS infrastructure defined in Terraform, and two GitHub Actions deployment pipelines.
 
+## Scope
+
+This is a small self-promotion and portfolio website for personal introductions and sample work. Keep hosting simple and inexpensive: static S3/CloudFront hosting, with the existing external Terraform backend. Sample projects are presented as public descriptions, screenshots, static examples, or links; the website does not connect to compute resources or handle customer data.
+
+Do not create or connect to a NAT gateway. VPC networking, servers, containers, databases, and live compute integrations are outside this scope. The backend folder remains reserved only; future Lambda work requires an explicit decision to expand the scope. See [ADR 0009](docs/adr/0009-minimal-portfolio-infrastructure.md).
+
 ## Current status
 
 The repository includes a minimal React frontend, Terraform hosting using an existing remote backend, deployment scripts, and two GitHub Actions pipelines. The frontend is an under-construction page ready to replace with personal content. Dev infrastructure has been deployed and verified; see the [deployment record](docs/deployments.md). Website content deployment is a separate step.

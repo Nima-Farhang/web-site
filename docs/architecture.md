@@ -2,6 +2,14 @@
 
 This repository owns one personal website introducing Nima Farhang, its hosting infrastructure, and its deployment automation. The frontend currently contains an under-construction page. Terraform and workflows are implemented. See the [deployment record](deployments.md) for verified AWS deployments.
 
+## Scope boundary
+
+The site is for personal self-promotion and showcasing sample work. Keep infrastructure limited to what the static website requires. Present projects using public text, screenshots, static examples, and links; do not connect the website to compute resources to run demonstrations. No customer data is collected, stored, or processed.
+
+Do not create, attach, or depend on NAT gateways. VPCs, subnets, private networking, servers, containers, databases, and live compute integrations are outside the current scope. Reference repositories provide coding and documentation patterns, not a reason to adopt platform infrastructure.
+
+`website/backend/` remains a folder reservation, not a planned active service. The earlier Lambda idea requires an explicit future scope decision before implementation. See [ADR 0009](adr/0009-minimal-portfolio-infrastructure.md).
+
 ## Application and hosting
 
 ```text

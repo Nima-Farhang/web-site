@@ -28,3 +28,4 @@ The site can deploy without a server application or database. CloudFront is an i
 
 - [Architecture](../architecture.md)
 - [Security model](../security-model.md)
+- [Scope clarification: minimal portfolio infrastructure](0009-minimal-portfolio-infrastructure.md)

@@ -9,3 +9,10 @@ provider "aws" {
     }
   }
 }
+
+# CloudFront requires its viewer certificate in us-east-1, regardless of the S3 region.
+provider "aws" {
+  alias               = "us_east_1"
+  region              = "us-east-1"
+  allowed_account_ids = [var.aws_account_id]
+}

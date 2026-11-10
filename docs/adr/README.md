@@ -16,3 +16,4 @@ Use [the template](template.md) for new records. Number records sequentially wit
 | [0008](0008-environment-teardown.md) | Accepted | Environment teardown |
 | [0009](0009-minimal-portfolio-infrastructure.md) | Accepted | Minimal portfolio infrastructure; no NAT gateways |
 | [0010](0010-manual-environment-deployments.md) | Accepted | Manual environment deployments |
+| [0011](0011-www-domain-on-prod.md) | Accepted | www.farhang.io on prod with Squarespace DNS |

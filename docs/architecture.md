@@ -19,7 +19,7 @@ website/frontend/ → React + TypeScript + Vite → static dist/ artifact
 website/backend/  → reserved for future AWS Lambda processes
 ```
 
-The initial site has no backend application or database. S3 is a regular private origin accessed through CloudFront origin access control. CloudFront redirects HTTP to HTTPS and uses its default hostname and certificate. Custom DNS, custom certificates, routing rewrites, and Lambda services require future implementation decisions.
+The initial site has no backend application or database. S3 is a regular private origin accessed through CloudFront origin access control. CloudFront redirects HTTP to HTTPS and uses its default hostname and certificate. Prod has optional ACM certificate and custom-hostname support for `www.farhang.io`, with DNS maintained at Squarespace. See [domain setup](domain-setup.md). Routing rewrites and Lambda services still require future decisions.
 
 ## Ownership
 

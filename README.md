@@ -22,7 +22,7 @@ GitHub Actions
 └── Terraform pipeline: select environment → validate → plan/apply target
 ```
 
-The initial website is frontend-only. `website/backend/` is reserved for future AWS Lambda processes; no backend is implemented yet. CloudFront will provide HTTPS in front of a private S3 bucket using origin access control. A custom domain, Route 53 records, and an ACM certificate can be added when the domain is decided; CloudFront's default hostname is sufficient to start.
+The initial website is frontend-only. `website/backend/` is reserved for future AWS Lambda processes; no backend is implemented yet. CloudFront will provide HTTPS in front of a private S3 bucket using origin access control. Prod is configured to request an ACM certificate for `www.farhang.io`; DNS remains at Squarespace. Certificate validation and domain cutover are separate manual steps. See [domain setup](docs/domain-setup.md).
 
 ## Repository structure
 

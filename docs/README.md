@@ -9,6 +9,7 @@ The root [README](../README.md) introduces the project and setup. These document
 | [Security model](security-model.md) | Credentials, private hosting, and state boundaries |
 | [Development standards](standards.md) | Coding, naming, commenting, scripts, and formatting |
 | [Development workflow](development-workflow.md) | Recording user decisions, validation, and commits |
+| [Domain setup](domain-setup.md) | www.farhang.io certificate validation and Squarespace DNS cutover |
 | [Verified deployments](deployments.md) | Live AWS deployment results and limitations |
 | [Decision records](adr/README.md) | Accepted decisions and why they were made |
 

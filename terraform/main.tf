@@ -1,3 +1,29 @@
+# Request first, publish the validation CNAME externally, then enable the domain.
+resource "aws_acm_certificate" "website" {
+  count             = var.custom_domain != "" ? 1 : 0
+  provider          = aws.us_east_1
+  domain_name       = var.custom_domain
+  validation_method = "DNS"
+  tags = {
+    Project     = "personal-website"
+    Environment = var.environment
+    ManagedBy   = "Terraform"
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_acm_certificate_validation" "website" {
+  count                   = var.enable_custom_domain ? 1 : 0
+  provider                = aws.us_east_1
+  certificate_arn         = aws_acm_certificate.website[0].arn
+  validation_record_fqdns = [for record in aws_acm_certificate.website[0].domain_validation_options : record.resource_record_name]
+  timeouts {
+    create = "10m"
+  }
+}
+
 resource "aws_s3_bucket" "website" {
   bucket        = "personal-website-${var.environment}-${var.aws_account_id}"
   force_destroy = var.force_destroy_buckets
@@ -36,6 +62,7 @@ resource "aws_cloudfront_origin_access_control" "website" {
   signing_protocol                  = "sigv4"
 }
 resource "aws_cloudfront_distribution" "website" {
+  aliases             = var.enable_custom_domain ? [var.custom_domain] : []
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
@@ -62,7 +89,10 @@ resource "aws_cloudfront_distribution" "website" {
     }
   }
   viewer_certificate {
-    cloudfront_default_certificate = true
+    cloudfront_default_certificate = !var.enable_custom_domain
+    acm_certificate_arn            = var.enable_custom_domain ? aws_acm_certificate_validation.website[0].certificate_arn : null
+    ssl_support_method             = var.enable_custom_domain ? "sni-only" : null
+    minimum_protocol_version       = var.enable_custom_domain ? "TLSv1.2_2021" : "TLSv1"
   }
 }
 data "aws_iam_policy_document" "website" {

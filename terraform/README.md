@@ -38,10 +38,10 @@ Terraform is pinned to `1.9.6`, matching the container and workflows. The AWS pr
 
 ## Hosting and permissions
 
-`main.tf` defines a versioned, encrypted private bucket with public access blocked, CloudFront origin access control, an HTTPS-only bucket policy, and a default-domain HTTPS distribution. Website uploads are managed by the website pipeline. No Lambda, DNS, custom-domain, or client-side route fallback resources are included.
+`main.tf` defines a versioned, encrypted private bucket with public access blocked, CloudFront origin access control, an HTTPS-only bucket policy, and a default-domain HTTPS distribution. Website uploads are managed by the website pipeline. Prod optionally requests an ACM certificate in us-east-1 for www.farhang.io and attaches it after external DNS validation. DNS remains at Squarespace; no Route 53, Lambda, or client-side route fallback resources are created. See [domain setup](../docs/domain-setup.md).
 
 Outputs are `website_bucket_name`, `cloudfront_distribution_id`, and `website_url`. The website script reads them from the selected state.
 
-Deployment credentials need permission to manage these website S3/CloudFront resources, read/write the website's state objects in the shared bucket, and describe/get/put/delete DynamoDB locks. They do not need to create the backend bucket or lock table. Website deployment also needs S3 object uploads and CloudFront invalidation access. No IAM resources are created here.
+Deployment credentials need permission to manage these website S3/CloudFront resources, read/write the website's state objects in the shared bucket, and describe/get/put/delete DynamoDB locks. They do not need to create the backend bucket or lock table. Website deployment also needs S3 object uploads and CloudFront invalidation access. Custom-domain deployments also need ACM certificate management permissions in us-east-1. No IAM resources are created here.
 
 State, saved plans, downloaded providers, and local overrides are ignored by Git. Commit provider lock files. Website buckets retain versions and old assets; normal deletion does not force-empty them. Explicit teardown uses `./scripts/destroy_environment.sh <environment>` to enable `force_destroy_buckets` only for bucket preparation and destroy plans; it deletes all site object versions after typed confirmation. See [commands](commands.md#destroy-one-environment). Dev has been deployed and verified; see the [deployment record](../docs/deployments.md).

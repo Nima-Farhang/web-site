@@ -11,7 +11,7 @@ variable "environment" {
   description = "Environment name used in website resource names."
   type        = string
   validation {
-    condition     = contains(["test", "prod"], var.environment)
-    error_message = "Environment must be test or prod."
+    condition     = contains(["dev", "test", "prod"], var.environment)
+    error_message = "Environment must be dev, test, or prod."
   }
 }

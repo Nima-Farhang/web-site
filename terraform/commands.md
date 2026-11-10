@@ -8,6 +8,16 @@ From the repository root:
 ./scripts/validate_terraform.sh
 ```
 
+## Dev deployment
+
+From the repository root:
+
+```bash
+./scripts/deploy_environment.sh dev
+```
+
+Dev is manually deployed and uses its own backend key. It does not change the test → prod CI sequence.
+
 ## Test init / plan
 
 ```bash

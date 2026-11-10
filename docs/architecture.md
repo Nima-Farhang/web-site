@@ -1,6 +1,6 @@
 # Architecture
 
-This repository owns one personal website introducing Nima Farhang, its hosting infrastructure, and its deployment automation. The frontend currently contains an under-construction page. Terraform and workflows are implemented; deployment status must be verified in AWS/Actions rather than inferred from the existence of code.
+This repository owns one personal website introducing Nima Farhang, its hosting infrastructure, and its deployment automation. The frontend currently contains an under-construction page. Terraform and workflows are implemented. See the [deployment record](deployments.md) for verified AWS deployments.
 
 ## Application and hosting
 
@@ -21,7 +21,7 @@ The initial site has no backend application or database. S3 is a regular private
 | `website/backend/` | Future Lambda source and dependencies |
 | `terraform/main.tf` | Website S3, CloudFront, and access policies |
 | `terraform/backend.tf` | Connection to the externally managed state backend |
-| `terraform/environments/*.tfvars` | Test/prod input values |
+| `terraform/environments/*.tfvars` | Dev/test/prod input values |
 | `scripts/` | Shared local and CI operational commands |
 | `.github/workflows/` | Separate website and infrastructure delivery |
 

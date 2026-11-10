@@ -1,6 +1,6 @@
 # Scripts
 
-Run entry points from any directory. Environment-aware scripts accept `test` or `prod` as the first argument, with `ENVIRONMENT` as a fallback.
+Run entry points from any directory. Environment-aware scripts accept `dev`, `test`, or `prod` as the first argument, with `ENVIRONMENT` as a fallback.
 
 | Command | Behavior |
 | --- | --- |
@@ -10,7 +10,7 @@ Run entry points from any directory. Environment-aware scripts accept `test` or 
 | `./scripts/dev_website.sh` | Start the installed frontend development server on `0.0.0.0:5173` |
 | `./scripts/deploy_website.sh test` | Deploy an existing build, invalidate CloudFront, verify the deployed HTML and release marker |
 
-Repeat environment deployments with `prod` after test succeeds. CI sets `APPLY_APPROVE=true` to skip the script's local confirmation. Terraform 1.9.6 and AWS CLI v2 are required for deployment; Node 22.12+ is required for builds.
+Use `./scripts/deploy_environment.sh dev` for manual AWS development checks. CI still promotes test then prod; repeat environment deployments with `prod` after test succeeds. CI sets `APPLY_APPROVE=true` to skip the script's local confirmation. Terraform 1.9.6 and AWS CLI v2 are required for deployment; Node 22.12+ is required for builds.
 
 `lib/environment.sh` shares path resolution and environment validation. Each deployed environment uses a separate `TF_DATA_DIR` under ignored `terraform/.terraform/`. This prevents switching test/prod from reusing backend metadata or plan files. Scripts fail on errors and use Terraform's remote state lock with a five-minute lock timeout.
 

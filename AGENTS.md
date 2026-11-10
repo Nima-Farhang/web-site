@@ -8,7 +8,7 @@ Read this file and `docs/README.md` before changing this repository. Follow `doc
 - Reserve `website/backend/` for future AWS Lambda processes; add backend implementation only when requested.
 - Keep Terraform flat under `terraform/`, following Data Product Demo. Resources go directly in `main.tf`; do not introduce modules or bootstrap infrastructure without a new decision.
 - Use the existing shared S3/DynamoDB backend. Never provision or destroy the shared backend from this repository.
-- Use `test` then `prod`; work directly on `master` without introducing a branching strategy.
+- Support `dev`, `test`, and `prod`; CI promotes `test` then `prod`, while `dev` is deployed manually; work directly on `master` without introducing a branching strategy.
 - Reuse scripts under `scripts/` for local and CI operations.
 
 ## Record decisions as part of the work

@@ -60,8 +60,18 @@ if name == 'curl':
         return [json.loads(line) for line in self.log.read_text().splitlines()] if self.log.exists() else []
 
     def test_invalid_environment_cannot_invoke_tools(self):
-        self.assertNotEqual(self.run_script('deploy_environment.sh', 'dev').returncode, 0)
+        self.assertNotEqual(self.run_script('deploy_environment.sh', 'staging').returncode, 0)
         self.assertEqual(self.calls(), [])
+
+    def test_dev_uses_separate_state_configuration(self):
+        result = self.run_script('deploy_environment.sh', 'dev')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        calls = self.calls()
+        init = next(call for call in calls if 'init' in call['args'])
+        plan = next(call for call in calls if 'plan' in call['args'])
+        self.assertTrue(any(arg.endswith('/terraform/backend-dev.hcl') for arg in init['args']))
+        self.assertTrue(any(arg.endswith('/environments/dev.tfvars') for arg in plan['args']))
+        self.assertTrue(plan['data_dir'].endswith('/.terraform/dev'))
 
     def test_failed_plan_cannot_apply(self):
         self.assertNotEqual(self.run_script('deploy_environment.sh', 'test', FAIL_PLAN='1').returncode, 0)

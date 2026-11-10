@@ -9,6 +9,7 @@ Use [the template](template.md) for new records. Number records sequentially wit
 | [0001](0001-personal-website-scope.md) | Accepted | Personal website scope |
 | [0002](0002-frontend-and-future-lambda-backend.md) | Accepted | Frontend and future Lambda backend |
 | [0003](0003-flat-terraform-and-existing-backend.md) | Accepted | Flat Terraform and existing backend |
-| [0004](0004-environments-and-delivery.md) | Accepted | Environments and delivery |
+| [0004](0004-environments-and-delivery.md) | Superseded by 0007 | Environments and delivery |
 | [0005](0005-codespaces-and-aws-authentication.md) | Accepted | Codespaces and AWS authentication |
 | [0006](0006-document-decisions-and-commit-changes.md) | Accepted | Document decisions and commit changes |
+| [0007](0007-add-dev-environment.md) | Accepted | Add dev environment |

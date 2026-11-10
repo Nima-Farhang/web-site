@@ -4,7 +4,7 @@ A small personal website introducing Nima Farhang, built as a static React and T
 
 ## Current status
 
-The repository includes a minimal React frontend, Terraform hosting using an existing remote backend, deployment scripts, and two GitHub Actions pipelines. The frontend is an under-construction page ready to replace with personal content. AWS resources have not been applied.
+The repository includes a minimal React frontend, Terraform hosting using an existing remote backend, deployment scripts, and two GitHub Actions pipelines. The frontend is an under-construction page ready to replace with personal content. Dev infrastructure has been deployed and verified; see the [deployment record](docs/deployments.md). Website content deployment is a separate step.
 
 ## Architecture
 
@@ -36,9 +36,11 @@ website/                    Website application code
   backend/                  Reserved for future AWS Lambda processes
 terraform/                  Shared Terraform root configuration
   environments/
+    dev.tfvars              Development inputs
     test.tfvars             Test inputs
     prod.tfvars             Production inputs
   backend.tf                Existing shared S3/DynamoDB backend
+  backend-dev.hcl           Development state key
   backend-test.hcl          Test state key
   backend-prod.hcl          Production state key
   main.tf                   Website hosting resources
@@ -80,7 +82,7 @@ Do not commit credentials or put them in the Docker image. A separate AWS accoun
 
 ## Environments and delivery
 
-Use the existing `master` branch for solo development. No additional branching strategy is required. There are exactly two deployed environments: `test` and `prod`; the Codespace is the local development environment.
+Use the existing `master` branch for solo development. No additional branching strategy is required. There are three AWS environments: `dev`, `test`, and `prod`. Deploy `dev` manually for AWS development checks; CI continues to promote `test` then `prod`. The Codespace is the local development environment.
 
 The pipelines are:
 
@@ -89,7 +91,7 @@ The pipelines are:
 | Website | Type-check, build the static site, upload to S3, invalidate CloudFront | Deploy to test, verify it, then deploy the same build artifact to prod |
 | Terraform | Format-check, validate, plan and apply AWS infrastructure | Apply test successfully before planning and applying prod |
 
-Both pipelines run on relevant changes to `master` and support manual dispatch. Terraform and website releases remain separate: provision infrastructure first, then deploy website assets. Each environment needs its own website bucket, CloudFront distribution, and Terraform state key. The existing shared S3 state bucket and DynamoDB lock table are used by both pipelines; this repository does not provision them.
+Both pipelines run on relevant changes to `master` and support manual dispatch. Terraform and website releases remain separate: provision infrastructure first, then deploy website assets. Each environment has its own website bucket, CloudFront distribution, and Terraform state key. The existing shared S3 state bucket and DynamoDB lock table are used by both pipelines; this repository does not provision them.
 
 Both workflows share one concurrency group, preventing infrastructure and website releases from overlapping. GitHub can replace an older pending run with a newer one; this is not a FIFO release queue. Test always completes before prod within a run.
 

@@ -5,7 +5,7 @@ Two workflows run on relevant pushes to `master` and support manual dispatch:
 - `terraform.yml`: formatting and backend-free validation, then saved-plan apply to test, then prod.
 - `website.yml`: type-check and build once, upload a versioned artifact, then deploy and verify the same artifact in test and prod.
 
-Only `master` can deploy, including manually triggered runs. Both workflows use the shared `aws-website-release` concurrency group with cancellation of active runs disabled. GitHub may replace pending runs with newer ones. The two workflows do not impose ordering on each other: run Terraform before Website for the first deployment or whenever content depends on infrastructure changes.
+Dev is available through local deployment scripts and is not added to CI promotion. Only `master` can deploy through these workflows, including manually triggered runs. Both workflows use the shared `aws-website-release` concurrency group with cancellation of active runs disabled. GitHub may replace pending runs with newer ones. The two workflows do not impose ordering on each other: run Terraform before Website for the first deployment or whenever content depends on infrastructure changes.
 
 Create GitHub environments `test` and `prod`. Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to each environment's secrets; optionally add `AWS_SESSION_TOKEN` for temporary credentials. Environment protection rules are optional and may be configured in GitHub. Without protection rules, successful test deployment promotes automatically to prod.
 

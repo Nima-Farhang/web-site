@@ -6,6 +6,7 @@ on:
     paths:
       - 'terraform/**'
       - 'scripts/deploy_environment.sh'
+      - 'scripts/destroy_environment.sh'
       - 'scripts/lib/**'
       - 'scripts/validate_terraform.sh'
       - 'scripts/tests/**'

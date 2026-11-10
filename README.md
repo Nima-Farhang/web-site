@@ -105,6 +105,10 @@ Configuration targets AWS account `210006516097`, region `ap-southeast-2`. These
 
 On a first push that changes both layers, the website workflow may run before infrastructure exists. Complete Terraform and rerun Website if that happens. Later deployments also use this order when website changes depend on new infrastructure.
 
+## Teardown
+
+Run `./scripts/destroy_environment.sh dev` (or `test` / `prod`) to remove one website stack. Confirm with `DESTROY <environment>`. This permanently deletes the selected site and all its S3 object versions while preserving the shared backend. See [script instructions](scripts/README.md#destroy-an-environment).
+
 ## Development conventions
 
 Use short, focused scripts under `scripts/` for repeatable operations shared by local development and CI. Resolve repository paths from the script location and accept environment names as a first argument with `ENVIRONMENT` as a fallback. Explain intent and non-obvious behavior in comments; use descriptive names for ordinary steps.

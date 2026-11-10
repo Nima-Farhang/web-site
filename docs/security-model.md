@@ -12,7 +12,7 @@ The provider, backend, and workflows check the intended account. Authentication 
 
 Website buckets block public access, enforce bucket ownership, enable encryption and versioning, and deny insecure transport. Bucket policies permit reads through their specific CloudFront distribution. CloudFront signs origin requests and redirects viewers to HTTPS.
 
-Website deployment retains old assets and object versions; buckets are not force-emptied on deletion. Retention cleanup and automatic rollback are not currently implemented. A failed verification prevents promotion but does not undo already uploaded objects.
+Website deployment retains old assets and object versions; normal configuration does not force-empty buckets. The explicit [destroy script](../scripts/README.md#destroy-an-environment) enables bucket deletion after typed confirmation and permanently removes all website object versions. The shared backend is preserved. Retention cleanup and automatic rollback are not currently implemented. A failed verification prevents promotion but does not undo already uploaded objects.
 
 ## Shared state boundary
 

@@ -15,3 +15,9 @@ variable "environment" {
     error_message = "Environment must be dev, test, or prod."
   }
 }
+
+variable "force_destroy_buckets" {
+  description = "Allow deletion of all website object versions during explicit teardown only."
+  type        = bool
+  default     = false
+}

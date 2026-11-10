@@ -46,3 +46,11 @@ From the repository root, deploy test before prod:
 ```
 
 The scripts isolate backend metadata by environment, show a saved plan, and request typed confirmation before applying it. GitHub Actions calls these same scripts with `APPLY_APPROVE=true` after the preceding stage succeeds.
+
+## Destroy one environment
+
+```bash
+./scripts/destroy_environment.sh dev
+```
+
+Run from the repository root (or use the script's absolute path). Substitute `test` or `prod` as needed. Enter `DESTROY dev` for the example above. This removes the selected website infrastructure and permanently deletes all its versioned site objects, while retaining the shared state bucket and lock table. See [script behavior and failure recovery](../scripts/README.md#destroy-an-environment).

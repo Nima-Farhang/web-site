@@ -21,6 +21,11 @@ class DeploymentScriptsTest(unittest.TestCase):
         build.mkdir(parents=True)
         (build / 'index.html').write_text('<html>fixture</html>')
         (build / 'release.json').write_text('{"commit":"fixture"}')
+        for environment in ('dev', 'test', 'prod'):
+            variables = self.repo / 'terraform/environments' / f'{environment}.tfvars'
+            variables.parent.mkdir(parents=True, exist_ok=True)
+            variables.write_text(f'environment = "{environment}"')
+            (self.repo / 'terraform' / f'backend-{environment}.hcl').write_text(f'key = "{environment}/website/terraform.tfstate"')
         self.log = self.directory / 'calls.jsonl'
         tool = self.directory / 'tool'
         tool.write_text('''#!/usr/bin/env python3
@@ -30,6 +35,12 @@ args = sys.argv[1:]
 with open(os.environ['TOOL_LOG'], 'a') as stream:
     stream.write(json.dumps({'tool': name, 'args': args, 'data_dir': os.environ.get('TF_DATA_DIR')}) + '\\n')
 if name == 'terraform':
+    if 'state' in args and 'list' in args and not os.environ.get('EMPTY_STATE'):
+        print('aws_s3_bucket.website')
+    if 'show' in args:
+        print(json.dumps({'resource_changes':[{'mode':'managed', 'address':'aws_s3_bucket.website', 'change':{'actions':[os.environ.get('BUCKET_PLAN_ACTION', 'update')]}}]}))
+    if 'apply' in args and args[-1].endswith('enable-bucket-deletion.tfplan') and os.environ.get('FAIL_BUCKET_APPLY'):
+        sys.exit(1)
     if 'plan' in args and os.environ.get('FAIL_PLAN'):
         sys.exit(1)
     if 'output' in args and '-raw' in args:
@@ -51,10 +62,10 @@ if name == 'curl':
                         FRONTEND_BUILD=str(build))
         self.env.pop('ENVIRONMENT', None)
 
-    def run_script(self, script, *args, **overrides):
+    def run_script(self, script, *args, stdin=None, **overrides):
         return subprocess.run(['bash', str(self.repo / 'scripts' / script), *args],
                               cwd=self.directory, env=dict(self.env, **overrides),
-                              capture_output=True, text=True)
+                              input=stdin, capture_output=True, text=True)
 
     def calls(self):
         return [json.loads(line) for line in self.log.read_text().splitlines()] if self.log.exists() else []
@@ -90,6 +101,53 @@ if name == 'curl':
         self.assertTrue(any(arg.endswith('/terraform/backend-prod.hcl') for arg in init['args']))
         self.assertTrue(plan['data_dir'].endswith('/.terraform/prod'))
         self.assertNotIn('-auto-approve', apply['args'])
+
+    def test_destroy_requires_exact_confirmation_even_with_apply_approve(self):
+        result = self.run_script('destroy_environment.sh', 'dev', stdin='dev\n')
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.calls(), [])
+
+    def test_destroy_invalid_environment_cannot_invoke_tools(self):
+        result = self.run_script('destroy_environment.sh', 'staging', stdin='DESTROY staging\n')
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.calls(), [])
+
+    def test_destroy_applies_preparation_before_exact_destroy_plan(self):
+        result = self.run_script('destroy_environment.sh', ENVIRONMENT='dev', stdin='DESTROY dev\n')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        operations = [call for call in self.calls() if 'plan' in call['args'] or 'apply' in call['args']]
+        self.assertEqual(len(operations), 4)
+        prepare, apply_prepare, destroy, apply_destroy = [call['args'] for call in operations]
+        self.assertIn('-target=aws_s3_bucket.website', prepare)
+        self.assertNotIn('-destroy', prepare)
+        self.assertIn('-destroy', destroy)
+        for plan, apply in ((prepare, apply_prepare), (destroy, apply_destroy)):
+            self.assertIn('-var=force_destroy_buckets=true', plan)
+            self.assertTrue(any(arg.endswith('/environments/dev.tfvars') for arg in plan))
+            self.assertEqual(apply[-1], next(arg.split('=', 1)[1] for arg in plan if arg.startswith('-out=')))
+        self.assertTrue(all(call['data_dir'].endswith('/.terraform/dev') for call in self.calls()))
+
+    def test_destroy_failed_preparation_plan_cannot_apply(self):
+        result = self.run_script('destroy_environment.sh', 'dev', stdin='DESTROY dev\n', FAIL_PLAN='1')
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(any('apply' in call['args'] for call in self.calls()))
+
+    def test_destroy_failed_preparation_apply_stops_teardown(self):
+        result = self.run_script('destroy_environment.sh', 'dev', stdin='DESTROY dev\n', FAIL_BUCKET_APPLY='1')
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(any('-destroy' in call['args'] for call in self.calls()))
+
+    def test_destroy_refuses_bucket_recreation_during_preparation(self):
+        result = self.run_script('destroy_environment.sh', 'dev', stdin='DESTROY dev\n', BUCKET_PLAN_ACTION='create')
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(any('apply' in call['args'] for call in self.calls()))
+
+    def test_destroy_empty_state_does_not_prepare_or_create_bucket(self):
+        result = self.run_script('destroy_environment.sh', 'dev', stdin='DESTROY dev\n', EMPTY_STATE='1')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        plans = [call['args'] for call in self.calls() if 'plan' in call['args']]
+        self.assertEqual(len(plans), 1)
+        self.assertIn('-destroy', plans[0])
 
     def test_wrong_deployed_release_fails_verification(self):
         result = self.run_script('deploy_website.sh', 'test', WRONG_RELEASE='1')

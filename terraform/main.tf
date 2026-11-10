@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "website" {
   bucket        = "personal-website-${var.environment}-${var.aws_account_id}"
-  force_destroy = false
+  force_destroy = var.force_destroy_buckets
 }
 resource "aws_s3_bucket_public_access_block" "website" {
   bucket                  = aws_s3_bucket.website.id

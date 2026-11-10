@@ -1,6 +1,6 @@
 # Deployment pipelines
 
-Both workflows follow Data Platform Demo's `workflow_dispatch` pattern. They have no push, pull-request, scheduled, or chained-workflow triggers.
+Terraform follows Data Platform Demo's manual `workflow_dispatch` pattern. Website also runs automatically on every push to master and deploys that revision to dev. Neither workflow uses pull-request, scheduled, or chained-workflow triggers.
 
 ## Run a deployment
 
@@ -9,7 +9,9 @@ Both workflows follow Data Platform Demo's `workflow_dispatch` pattern. They hav
 3. Click **Run workflow**, select branch `master`, and choose `dev`, `test`, or `prod` from the **environment** dropdown (default: `dev`).
 4. Click **Run workflow** to start the selected deployment.
 
-Each run targets one environment only. Terraform validates and applies a saved plan for that target. Website builds one artifact, deploys it to that target, and checks the deployed HTML and release marker. There is no automatic test-to-prod promotion or automatic trigger when code is committed or pushed. Deployments from other branches are skipped by the existing master guard.
+Every master push builds Website and deploys to dev, including documentation-only changes. A local commit must be pushed to GitHub to trigger Actions. Push runs explicitly resolve the target, GitHub environment secrets, and shared concurrency group to dev.
+
+Each manual run targets one environment only. Terraform validates and applies a saved plan for that target. Website builds one artifact, deploys it to that target, and checks the deployed HTML and release marker. There is no automatic test-to-prod promotion or infrastructure push trigger. Deployments from other branches are skipped by the existing master guard.
 
 Create GitHub environments `dev`, `test`, and `prod`; configure `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in each environment's secrets. `AWS_SESSION_TOKEN` is optional for temporary credentials. Codespaces secrets are separate. GitHub environment protection rules remain optional.
 
@@ -19,4 +21,4 @@ Run Terraform before Website when creating a target or introducing infrastructur
 
 The workflows target account `210006516097` in `ap-southeast-2` and reuse the existing shared state bucket and DynamoDB table. Website targets come from Terraform outputs. Saved plans remain on the job runner; frontend artifacts are retained for seven days. These workflows do not destroy resources.
 
-See [ADR 0010](../../docs/adr/0010-manual-environment-deployments.md).
+See [ADR 0012](../../docs/adr/0012-first-portfolio-and-automatic-dev-delivery.md).

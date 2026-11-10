@@ -15,5 +15,6 @@ Use [the template](template.md) for new records. Number records sequentially wit
 | [0007](0007-add-dev-environment.md) | Deployment model superseded by 0010 | Add dev environment |
 | [0008](0008-environment-teardown.md) | Accepted | Environment teardown |
 | [0009](0009-minimal-portfolio-infrastructure.md) | Accepted | Minimal portfolio infrastructure; no NAT gateways |
-| [0010](0010-manual-environment-deployments.md) | Accepted | Manual environment deployments |
+| [0010](0010-manual-environment-deployments.md) | Website trigger superseded by 0012; Terraform accepted | Manual environment deployments |
 | [0011](0011-www-domain-on-prod.md) | Accepted | www.farhang.io on prod with Squarespace DNS |
+| [0012](0012-first-portfolio-and-automatic-dev-delivery.md) | Accepted | First portfolio and automatic dev website delivery |

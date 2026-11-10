@@ -1,6 +1,6 @@
 # Architecture
 
-This repository owns one personal website introducing Nima Farhang, its hosting infrastructure, and its deployment automation. The frontend currently contains an under-construction page. Terraform and workflows are implemented. See the [deployment record](deployments.md) for verified AWS deployments.
+This repository owns one personal website introducing Nima Farhang, its hosting infrastructure, and its deployment automation. The frontend is a single-page portfolio introducing Nima and five public sample repositories. Terraform and workflows are implemented. See the [deployment record](deployments.md) for verified AWS deployments.
 
 ## Scope boundary
 
@@ -37,6 +37,6 @@ Terraform owns hosting resources; the website pipeline owns uploaded site object
 
 ## Delivery
 
-Both pipelines start only from GitHub's Run workflow control with a dev/test/prod dropdown. Website checks types, builds an artifact, deploys it to the selected target, and verifies its HTML and release marker. Terraform validates and applies a saved plan for the selected target. There is no automatic promotion or push trigger. Both workflows share a concurrency group per environment; run infrastructure first when content depends on it.
+Website runs automatically on master pushes to dev and also offers manual dev/test/prod selection. Terraform starts only through manual environment selection. Website checks types, builds an artifact, deploys it to the selected target, and verifies its HTML and release marker. Terraform validates and applies a saved plan for the selected target. There is no automatic test/prod promotion or infrastructure push trigger. Both workflows share a concurrency group per environment; run infrastructure first when content depends on it.
 
 See [environment strategy](environment-strategy.md), [pipeline operations](../.github/workflows/README.md), and the [accepted decisions](adr/README.md).

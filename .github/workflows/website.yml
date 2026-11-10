@@ -1,6 +1,8 @@
 name: Website
 
 on:
+  push:
+    branches: [master]
   workflow_dispatch:
     inputs:
       environment:
@@ -17,7 +19,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: aws-website-release-${{ inputs.environment }}
+  group: aws-website-release-${{ github.event_name == 'push' && 'dev' || inputs.environment }}
   cancel-in-progress: false
 
 jobs:
@@ -40,14 +42,14 @@ jobs:
           retention-days: 7
 
   deploy:
-    name: Deploy ${{ inputs.environment }}
+    name: Deploy ${{ github.event_name == 'push' && 'dev' || inputs.environment }}
     if: github.ref == 'refs/heads/master'
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    environment: ${{ inputs.environment }}
+    environment: ${{ github.event_name == 'push' && 'dev' || inputs.environment }}
     env:
-      ENVIRONMENT: ${{ inputs.environment }}
+      ENVIRONMENT: ${{ github.event_name == 'push' && 'dev' || inputs.environment }}
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3

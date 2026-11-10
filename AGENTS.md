@@ -9,7 +9,7 @@ Read this file and `docs/README.md` before changing this repository. Follow `doc
 - Keep `website/backend/` as a reserved folder only. The earlier Lambda idea does not authorize provisioning compute; implement it only after an explicit user decision to expand the static-site scope.
 - Keep Terraform flat under `terraform/`, following Data Product Demo. Resources go directly in `main.tf`; do not introduce modules or bootstrap infrastructure without a new decision.
 - Use the existing shared S3/DynamoDB backend. Never provision or destroy the shared backend from this repository.
-- Support `dev`, `test`, and `prod`; both deployment workflows are manual-only with a dev/test/prod dropdown and deploy only the selected environment; work directly on `master` without introducing a branching strategy.
+- Support `dev`, `test`, and `prod`; Terraform deployment is manual-only; Website deploys automatically to dev on pushes to master and retains a manual dev/test/prod dropdown. Manual runs deploy only the selected target; work directly on `master` without introducing a branching strategy.
 - Reuse scripts under `scripts/` for local and CI operations.
 
 ## Record decisions as part of the work

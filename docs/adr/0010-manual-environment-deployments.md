@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted; supersedes the deployment-trigger and promotion model in [0007](0007-add-dev-environment.md), retaining all three environments.
+Website trigger superseded by [0012](0012-first-portfolio-and-automatic-dev-delivery.md); Terraform manual deployment remains accepted. Originally accepted; supersedes the deployment-trigger and promotion model in [0007](0007-add-dev-environment.md), retaining all three environments.
 
 ## Recorded
 

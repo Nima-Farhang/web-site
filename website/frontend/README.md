@@ -1,18 +1,26 @@
 # Frontend
 
-A minimal React and TypeScript application built with Vite. The current page is an under-construction placeholder for Nima Farhang.
-
-From the repository root:
+The initial portfolio is one static React and TypeScript page built with Vite. It introduces Nima Farhang and showcases five public repositories with summaries grounded in their READMEs.
 
 ```bash
 ./scripts/build_website.sh
 ./scripts/dev_website.sh
 ```
 
-The build script installs locked dependencies, checks TypeScript, produces `website/frontend/dist/`, and writes a public `release.json` containing the commit SHA. Each manual Website workflow run builds an artifact and deploys it to the selected dev, test, or prod environment. The development script binds to `0.0.0.0:5173` for Codespaces; run the build script or `npm ci` first to install dependencies.
+Run these from the repository root. The build installs locked dependencies, checks TypeScript, generates `website/frontend/dist/`, and writes a public `release.json` containing the commit SHA. The development server binds to `0.0.0.0:5173` for Codespaces.
 
-From this directory you can also use `npm run dev`, `npm run typecheck`, `npm run build`, and `npm run preview`.
+## Editing
 
-Use `src/components/` for reusable UI, `src/content/` for personal information, `src/styles/` for shared CSS, and `src/assets/` for imported assets. Files in `public/` are copied without processing. Everything in the static build is public, including frontend configuration.
+- `src/App.tsx`: introduction, page sections, and navigation.
+- `src/content/portfolio.ts`: project summaries, technologies, and public repository links.
+- `src/components/`: shared project cards and icons.
+- `src/styles/reference-bootstrap.css`: adapted Lux template from the supplied reference; retain license attribution.
+- `src/styles/site.css`: local palette, responsive layout, and accessibility styles.
 
-There is no client-side router or SPA error fallback. Add routing behavior explicitly if additional routes are introduced. Backend Lambda code remains separate under `website/backend/`.
+See [content sources](../../docs/portfolio-content.md) and [third-party notices](THIRD_PARTY_NOTICES.md). The site uses system-font fallbacks and inline graphics rather than remote fonts or imagery.
+
+## Delivery
+
+Every push to master builds and deploys Website to dev. Manual dispatch still allows selecting dev, test, or prod. The infrastructure workflow remains manual. A local commit must reach GitHub to trigger Actions; direct AWS deployments use `./scripts/deploy_website.sh dev` after building.
+
+No router, dynamic repository API, backend, or customer-data collection is added. All bundled content is public. The www.farhang.io production-domain setup is independent of dev's CloudFront URL.

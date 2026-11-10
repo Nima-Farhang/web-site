@@ -10,7 +10,7 @@ Do not create or connect to a NAT gateway. VPC networking, servers, containers, 
 
 ## Current status
 
-The repository includes a minimal React frontend, Terraform hosting using an existing remote backend, deployment scripts, and two GitHub Actions pipelines. The frontend is an under-construction page ready to replace with personal content. Dev infrastructure has been deployed and verified; see the [deployment record](docs/deployments.md). Website content deployment is a separate step.
+The repository includes a minimal React frontend, Terraform hosting using an existing remote backend, deployment scripts, and two GitHub Actions pipelines. The first draft is a single-page portfolio with an introduction and five public repository summaries, using the supplied Full-Stack-WebApp-Demo palette and CSS template. Dev infrastructure has been deployed and verified; see the [deployment record](docs/deployments.md). Website content deployment is a separate step.
 
 ## Architecture
 
@@ -18,7 +18,8 @@ The repository includes a minimal React frontend, Terraform hosting using an exi
 Browser → HTTPS / CloudFront → private S3 website bucket
 
 GitHub Actions
-├── Website pipeline: select environment → build → deploy and verify target
+├── Website pipeline: master push → build → deploy and verify dev
+│                     manual run → deploy selected target
 └── Terraform pipeline: select environment → validate → plan/apply target
 ```
 
@@ -90,7 +91,7 @@ Do not commit credentials or put them in the Docker image. A separate AWS accoun
 
 Work directly on `master` as the sole developer. There are three AWS environments: `dev`, `test`, and `prod`; the Codespace provides local development separately.
 
-Both deployment pipelines are manual-only. In **GitHub → Actions**, select **Terraform** or **Website**, click **Run workflow**, choose branch `master`, select `dev`, `test`, or `prod`, then click **Run workflow** again. Each run deploys only the selected environment. Pushes do not trigger workflows, and no automatic test-to-prod promotion occurs.
+Website builds and deploys automatically to dev on every push to `master`. Terraform stays manual-only. Both pipelines retain manual environment selection. In **GitHub → Actions**, select **Terraform** or **Website**, click **Run workflow**, choose branch `master`, select `dev`, `test`, or `prod`, then click **Run workflow** again. Each run deploys only the selected environment. Automatic Website runs target dev only; no automatic test-to-prod promotion occurs. Local commits must be pushed to GitHub before Actions can run.
 
 | Pipeline | Behavior |
 | --- | --- |
@@ -103,7 +104,7 @@ Both deployment pipelines are manual-only. In **GitHub → Actions**, select **T
 2. Run **Terraform** for the desired environment and wait for completion.
 3. Run **Website** for the same environment and desired commit on `master`.
 
-The workflow files must be pushed to GitHub's default branch before the new controls appear. The repository change itself does not push or start a deployment.
+The workflow files must be pushed to GitHub's default branch before the new controls appear. Local workflow edits do not activate remote automation until pushed. The first portfolio draft is deployed separately using the shared AWS scripts; see the deployment record.
 
 Both workflows share a concurrency group per environment, preventing infrastructure/content releases from overlapping for the same target. Different environments can run independently. GitHub may replace older pending runs; this is not a FIFO queue. When changes depend on infrastructure, run Terraform before Website. Testing a revision in test before manually selecting prod remains recommended, but is not enforced by a promotion job.
 

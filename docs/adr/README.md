@@ -1,0 +1,14 @@
+# Architecture Decision Records
+
+These records capture the project decisions already made during repository setup. The structure follows Data Platform Demo; the decisions themselves belong to this smaller personal website.
+
+Use [the template](template.md) for new records. Number records sequentially without reusing numbers. Status values are Proposed, Accepted, Superseded, and Rejected. Preserve superseded records and link their replacements. See [development workflow](../development-workflow.md) for when and how to record user decisions.
+
+| Record | Status | Topic |
+| --- | --- | --- |
+| [0001](0001-personal-website-scope.md) | Accepted | Personal website scope |
+| [0002](0002-frontend-and-future-lambda-backend.md) | Accepted | Frontend and future Lambda backend |
+| [0003](0003-flat-terraform-and-existing-backend.md) | Accepted | Flat Terraform and existing backend |
+| [0004](0004-environments-and-delivery.md) | Accepted | Environments and delivery |
+| [0005](0005-codespaces-and-aws-authentication.md) | Accepted | Codespaces and AWS authentication |
+| [0006](0006-document-decisions-and-commit-changes.md) | Accepted | Document decisions and commit changes |

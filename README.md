@@ -107,7 +107,9 @@ On a first push that changes both layers, the website workflow may run before in
 
 Use short, focused scripts under `scripts/` for repeatable operations shared by local development and CI. Resolve repository paths from the script location and accept environment names as a first argument with `ENVIRONMENT` as a fallback. Explain intent and non-obvious behavior in comments; use descriptive names for ordinary steps.
 
-See [docs/standards.md](docs/standards.md), [scripts/README.md](scripts/README.md), and [terraform/README.md](terraform/README.md) for details.
+See the [documentation index](docs/README.md), [coding and naming standards](docs/standards.md), and [decision records](docs/adr/README.md). Record user decisions and documentation requests during the same task, then validate and locally commit completed changes as described in the [development workflow](docs/development-workflow.md). [AGENTS.md](AGENTS.md) preserves these instructions for future sessions.
+
+Operational details live in [scripts/README.md](scripts/README.md) and [terraform/README.md](terraform/README.md).
 
 ## References
 

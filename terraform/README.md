@@ -1,19 +1,43 @@
 # Terraform
 
-This directory reserves the infrastructure layout. No Terraform resources or deployable configuration exist yet.
+A single Terraform root provisions the website's private S3 bucket and HTTPS CloudFront distribution in test and prod. The flat structure follows [Data Product Demo](https://github.com/Nima-Farhang/Data-Product-Demo/tree/master/TERRAFORM). Resources are defined directly in `main.tf`; there are no modules or bootstrap resources.
 
-Use a single shared root configuration here, with environment inputs and backend configuration under `environments/test/` and `environments/prod/`. Put reusable hosting resources in `modules/website/`. Use `bootstrap/` for the remote-state foundation, keeping its lifecycle separate from website hosting.
+## Files
 
-Planned infrastructure:
+| File | Purpose |
+| --- | --- |
+| `main.tf` | Website S3 and CloudFront resources and access policies |
+| `variables.tf` | Environment, AWS account, and region inputs |
+| `outputs.tf` | Website bucket, distribution ID, and URL |
+| `provider.tf` / `versions.tf` | AWS provider configuration and tool versions |
+| `backend.tf` | Common settings for the existing shared backend |
+| `backend-test.hcl` / `backend-prod.hcl` | Environment-specific state keys |
+| `environments/test.tfvars` / `environments/prod.tfvars` | Environment input values |
+| `commands.md` | Direct Terraform and helper script commands |
 
-- Private S3 website buckets with public access blocked.
-- CloudFront distributions with HTTPS and origin access control for S3 access.
-- Bucket policies allowing reads only through the appropriate distribution.
-- A protected, versioned S3 Terraform state backend with separate state keys for test and prod and a locking mechanism compatible with the selected Terraform version.
-- Optional DNS and ACM resources after selecting a custom domain.
+## Existing backend
 
-The container uses Terraform 1.9.6 to match the reference projects. Choose compatible backend locking when implementing bootstrap, or update the tool version consistently before adopting features that require newer Terraform.
+Use the same backend as Data Product Demo:
 
-Expected environment files are `backend-test.hcl` and `test.tfvars` under `environments/test/`, and `backend-prod.hcl` and `prod.tfvars` under `environments/prod/`. Add these after choosing actual resource names and backend details. Backend files contain location settings, never credentials. Use `*.local.hcl` and `*.local.tfvars` for uncommitted overrides.
+- Bucket: `nima-terraform-state-210006516097`.
+- DynamoDB table: `terraform-state-lock`.
+- Region: `ap-southeast-2`.
+- Website state keys: `test/website/terraform.tfstate` and `prod/website/terraform.tfstate`.
 
-Commit provider lock files. Keep downloaded providers, state, saved plans, credentials, and local overrides out of Git. Apply infrastructure to test before prod. The website pipeline owns the built site objects; Terraform owns hosting resources.
+The backend resources are managed elsewhere. This repository neither creates nor destroys them. Website state keys are separate from Data Product Demo's Snowflake keys. Backend credentials come from the AWS environment/profile, never from committed configuration. The provider and backend restrict access to account `210006516097`.
+
+## Deployment
+
+Run `./scripts/validate_terraform.sh`, then deploy test with `./scripts/deploy_environment.sh test` and prod with `./scripts/deploy_environment.sh prod`. The script initializes the selected backend, validates, saves a plan, and applies that exact plan after typed confirmation. CI uses the same script with `APPLY_APPROVE=true`. Separate local data directories prevent environment switching from reusing the wrong backend metadata.
+
+Terraform is pinned to `1.9.6`, matching the container and workflows. The AWS provider uses `~> 5.0` with a committed lock file. DynamoDB provides state locking for this Terraform version.
+
+## Hosting and permissions
+
+`main.tf` defines a versioned, encrypted private bucket with public access blocked, CloudFront origin access control, an HTTPS-only bucket policy, and a default-domain HTTPS distribution. Website uploads are managed by the website pipeline. No Lambda, DNS, custom-domain, or client-side route fallback resources are included.
+
+Outputs are `website_bucket_name`, `cloudfront_distribution_id`, and `website_url`. The website script reads them from the selected state.
+
+Deployment credentials need permission to manage these website S3/CloudFront resources, read/write the website's state objects in the shared bucket, and describe/get/put/delete DynamoDB locks. They do not need to create the backend bucket or lock table. Website deployment also needs S3 object uploads and CloudFront invalidation access. No IAM resources are created here.
+
+State, saved plans, downloaded providers, and local overrides are ignored by Git. Commit provider lock files. Website buckets retain versions and old assets; deletion does not force-empty them. No AWS resources have been applied during implementation.

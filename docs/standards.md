@@ -12,7 +12,7 @@ Keep operational shell commands under `scripts/`, use strict Bash, and resolve p
 
 ## Infrastructure
 
-Use lowercase folders and descriptive Terraform resource labels. Name AWS resources with `<project>-<environment>-<component>`, adding a unique suffix where needed for globally unique S3 names. Keep account-specific values in environment configuration rather than modules.
+Use lowercase folders and descriptive Terraform resource labels. Name AWS resources with `<project>-<environment>-<component>`, adding a unique suffix where needed for globally unique S3 names. Keep website resources directly in `terraform/main.tf`, common backend settings in `backend.tf`, and environment inputs in `environments/*.tfvars`, following Data Product Demo. The shared state bucket and lock table are managed outside this repository.
 
 Apply `Project`, `Environment`, and `ManagedBy = Terraform` tags to taggable resources. Separate test and prod configuration and state. Keep credentials out of Terraform files and Git; commit provider lock files.
 

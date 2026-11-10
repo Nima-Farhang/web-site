@@ -1,14 +1,18 @@
 # Frontend
 
-This folder will contain the static React and TypeScript application, using Vite to build assets into `website/frontend/dist/` for S3 deployment. Application code and dependencies have not been generated yet. Run frontend npm commands from `website/frontend/`.
+A minimal React and TypeScript application built with Vite. The current page is an under-construction placeholder for Nima Farhang.
 
-Keep the application entry point and top-level component in `src/`. Use `src/components/` for reusable UI, `src/content/` for personal copy and project information, `src/styles/` for shared CSS, and `src/assets/` for imported assets. Files in `public/` are copied without processing.
+From the repository root:
 
-When adding the application:
+```bash
+./scripts/build_website.sh
+./scripts/dev_website.sh
+```
 
-1. Create the React/TypeScript Vite configuration and commit `package.json` and `package-lock.json`.
-2. Provide npm commands for development, type-checking, and production builds.
-3. Add root-level shell entry points under `scripts/` that call these commands locally and in CI.
-4. Bind the development server to `0.0.0.0:5173` for Codespaces.
+The build script installs locked dependencies, checks TypeScript, produces `website/frontend/dist/`, and writes a public `release.json` containing the commit SHA. CI builds once and deploys the same artifact to test and prod. The development script binds to `0.0.0.0:5173` for Codespaces; run the build script or `npm ci` first to install dependencies.
 
-Anything embedded in a static build is public. Frontend environment variables must contain only public configuration. Prefer a simple single-page introduction initially; add client-side routing and CloudFront route handling only when needed.
+From this directory you can also use `npm run dev`, `npm run typecheck`, `npm run build`, and `npm run preview`.
+
+Use `src/components/` for reusable UI, `src/content/` for personal information, `src/styles/` for shared CSS, and `src/assets/` for imported assets. Files in `public/` are copied without processing. Everything in the static build is public, including frontend configuration.
+
+There is no client-side router or SPA error fallback. Add routing behavior explicitly if additional routes are introduced. Backend Lambda code remains separate under `website/backend/`.

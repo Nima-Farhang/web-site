@@ -4,9 +4,9 @@ A small personal website introducing Nima Farhang, built as a static React and T
 
 ## Current status
 
-This is the initial repository scaffold. The Codespaces configuration, AWS credential setup, folder structure, and working conventions are in place. React application code, Terraform resources, remote state bootstrap, and executable CI/CD workflows are the next implementation steps. Nothing in this scaffold deploys resources.
+The repository includes a minimal React frontend, Terraform hosting using an existing remote backend, deployment scripts, and two GitHub Actions pipelines. The frontend is an under-construction page ready to replace with personal content. AWS resources have not been applied.
 
-## Planned architecture
+## Architecture
 
 ```text
 Browser → HTTPS / CloudFront → private S3 website bucket
@@ -22,7 +22,7 @@ The initial website is frontend-only. `website/backend/` is reserved for future 
 
 ```text
 .devcontainer/               Codespaces image, initialization, AWS setup
-.github/workflows/           Website and Terraform pipeline definitions (planned)
+.github/workflows/           Website and Terraform pipeline definitions
 docs/                       Architecture and development conventions
 scripts/                    Repeatable local and CI commands
 website/                    Website application code
@@ -34,22 +34,24 @@ website/                    Website application code
       content/              Personal introduction and project content
       styles/               Shared styles
   backend/                  Reserved for future AWS Lambda processes
-terraform/                  Shared Terraform root configuration (planned)
-  bootstrap/                Remote-state foundation
+terraform/                  Shared Terraform root configuration
   environments/
-    test/                   Test backend configuration and inputs
-    prod/                   Production backend configuration and inputs
-  modules/website/           Reusable S3 and CloudFront resources
+    test.tfvars             Test inputs
+    prod.tfvars             Production inputs
+  backend.tf                Existing shared S3/DynamoDB backend
+  backend-test.hcl          Test state key
+  backend-prod.hcl          Production state key
+  main.tf                   Website hosting resources
 ```
 
 ## Start in GitHub Codespaces
 
 1. Create a Codespace for this repository, or run **Codespaces: Rebuild Container** in an existing Codespace.
 2. The container provides Node.js 22 with npm, Terraform 1.9.6, AWS CLI v2, Git, ripgrep, and ShellCheck.
-3. Initialization configures AWS if credentials are available. Frontend dependencies will be installed with `npm ci` once `website/frontend/package-lock.json` exists.
-4. Follow [website/README.md](website/README.md) for the application layout and [website/frontend/README.md](website/frontend/README.md) for the frontend implementation plan.
+3. Initialization configures AWS if credentials are available. Frontend dependencies are installed with `npm ci`.
+4. Follow [website/README.md](website/README.md) for the application layout and [website/frontend/README.md](website/frontend/README.md) for frontend commands.
 
-Port `5173` is forwarded for the future Vite development server. Run that server with `--host 0.0.0.0` so the Codespaces forwarded port can reach it.
+Run `./scripts/dev_website.sh` to start Vite on the forwarded port `5173`. Run `./scripts/build_website.sh` to type-check and build the frontend.
 
 ## AWS setup
 
@@ -80,16 +82,26 @@ Do not commit credentials or put them in the Docker image. A separate AWS accoun
 
 Use the existing `master` branch for solo development. No additional branching strategy is required. There are exactly two deployed environments: `test` and `prod`; the Codespace is the local development environment.
 
-The planned pipelines are:
+The pipelines are:
 
 | Pipeline | Responsibility | Promotion |
 | --- | --- | --- |
 | Website | Type-check, build the static site, upload to S3, invalidate CloudFront | Deploy to test, verify it, then deploy the same build artifact to prod |
 | Terraform | Format-check, validate, plan and apply AWS infrastructure | Apply test successfully before planning and applying prod |
 
-Both pipelines will run on relevant changes to `master` and support manual dispatch. Terraform and website releases remain separate: provision infrastructure first, then deploy website assets. Each environment needs its own website bucket, CloudFront distribution, and Terraform state key. Bootstrap must establish remote state before the infrastructure pipeline can initialize it.
+Both pipelines run on relevant changes to `master` and support manual dispatch. Terraform and website releases remain separate: provision infrastructure first, then deploy website assets. Each environment needs its own website bucket, CloudFront distribution, and Terraform state key. The existing shared S3 state bucket and DynamoDB lock table are used by both pipelines; this repository does not provision them.
 
-Configure GitHub environments named `test` and `prod` when implementing CI/CD. Keep AWS region, backend settings, and website deployment targets environment-specific. AWS credentials belong in environment secrets. The workflow implementation should serialize deployments per environment to avoid overlapping releases.
+Both workflows share one concurrency group, preventing infrastructure and website releases from overlapping. GitHub can replace an older pending run with a newer one; this is not a FIFO release queue. Test always completes before prod within a run.
+
+### First deployment
+
+1. Create GitHub environments named `test` and `prod` under repository Settings → Environments. Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` as environment secrets in each. Codespaces secrets are separate and are not available to Actions. `AWS_SESSION_TOKEN` is optional for temporary credentials.
+2. Run the **Terraform** workflow manually on `master` and wait for both deployments.
+3. Run the **Website** workflow manually on `master` to deploy and verify both sites.
+
+Configuration targets AWS account `210006516097`, region `ap-southeast-2`. These non-secret settings are committed in Terraform environment files and checked by the workflows. Change them consistently if moving accounts or regions. Required AWS permissions and script details are documented in [terraform/README.md](terraform/README.md).
+
+On a first push that changes both layers, the website workflow may run before infrastructure exists. Complete Terraform and rerun Website if that happens. Later deployments also use this order when website changes depend on new infrastructure.
 
 ## Development conventions
 

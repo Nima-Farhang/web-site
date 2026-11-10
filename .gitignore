@@ -37,6 +37,9 @@ override.tf.json
 *.local.hcl
 # Commit .terraform.lock.hcl files for reproducible provider installation.
 
+# Script test caches
+__pycache__/
+
 # Logs / temporary files
 *.log
 tmp/

@@ -1,0 +1,95 @@
+name: Website
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'website/frontend/**'
+      - 'scripts/build_website.sh'
+      - 'scripts/deploy_website.sh'
+      - 'scripts/lib/**'
+      - 'scripts/tests/**'
+      - '.github/workflows/website.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aws-website-release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: website/frontend/package-lock.json
+      - run: python3 -m unittest discover -s scripts/tests -v
+      - run: ./scripts/build_website.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: website-${{ github.sha }}
+          path: website/frontend/dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy-test:
+    if: github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.9.6'
+          terraform_wrapper: false
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ap-southeast-2
+      - name: Verify AWS account
+        run: test "$(aws sts get-caller-identity --query Account --output text)" = "210006516097"
+      - uses: actions/download-artifact@v4
+        with:
+          name: website-${{ github.sha }}
+          path: website/frontend/dist/
+      - name: Deploy and verify test
+        run: ./scripts/deploy_website.sh test
+
+  deploy-prod:
+    if: github.ref == 'refs/heads/master'
+    needs: deploy-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.9.6'
+          terraform_wrapper: false
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ap-southeast-2
+      - name: Verify AWS account
+        run: test "$(aws sts get-caller-identity --query Account --output text)" = "210006516097"
+      - uses: actions/download-artifact@v4
+        with:
+          name: website-${{ github.sha }}
+          path: website/frontend/dist/
+      - name: Deploy and verify prod
+        run: ./scripts/deploy_website.sh prod

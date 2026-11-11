@@ -29,7 +29,7 @@ The initial site has no backend application or database. S3 is a regular private
 | `website/backend/` | Future Lambda source and dependencies |
 | `terraform/main.tf` | Website S3, CloudFront, and access policies |
 | `terraform/backend.tf` | Connection to the externally managed state backend |
-| `terraform/environments/*.tfvars` | Dev/test/prod input values |
+| `terraform/environments/*.tfvars` | Dev/prod input values |
 | `scripts/` | Shared local and CI operational commands |
 | `.github/workflows/` | Separate website and infrastructure delivery |
 
@@ -37,6 +37,6 @@ Terraform owns hosting resources; the website pipeline owns uploaded site object
 
 ## Delivery
 
-Website runs automatically on master pushes to dev and also offers manual dev/test/prod selection. Terraform starts only through manual environment selection. Website checks types, builds an artifact, deploys it to the selected target, and verifies its HTML and release marker. Terraform validates and applies a saved plan for the selected target. There is no automatic test/prod promotion or infrastructure push trigger. Both workflows share a concurrency group per environment; run infrastructure first when content depends on it.
+Website runs automatically on master pushes to dev and also offers manual dev/prod selection. Terraform starts only through manual environment selection. Website checks types, builds an artifact, deploys it to the selected target, and verifies its HTML and release marker. Terraform validates and applies a saved plan for the selected target. There is no automatic cross-environment promotion or infrastructure push trigger. Both workflows share a concurrency group per environment; run infrastructure first when content depends on it.
 
 See [environment strategy](environment-strategy.md), [pipeline operations](../.github/workflows/README.md), and the [accepted decisions](adr/README.md).

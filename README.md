@@ -44,11 +44,9 @@ website/                    Website application code
 terraform/                  Shared Terraform root configuration
   environments/
     dev.tfvars              Development inputs
-    test.tfvars             Test inputs
     prod.tfvars             Production inputs
   backend.tf                Existing shared S3/DynamoDB backend
   backend-dev.hcl           Development state key
-  backend-test.hcl          Test state key
   backend-prod.hcl          Production state key
   main.tf                   Website hosting resources
 ```
@@ -89,9 +87,9 @@ Do not commit credentials or put them in the Docker image. A separate AWS accoun
 
 ## Environments and delivery
 
-Work directly on `master` as the sole developer. There are three AWS environments: `dev`, `test`, and `prod`; the Codespace provides local development separately.
+Work directly on `master` as the sole developer. There are two AWS environments: `dev` and `prod`; the Codespace provides local development separately.
 
-Website builds and deploys automatically to dev on every push to `master`. Terraform stays manual-only. Both pipelines retain manual environment selection. In **GitHub → Actions**, select **Terraform** or **Website**, click **Run workflow**, choose branch `master`, select `dev`, `test`, or `prod`, then click **Run workflow** again. Each run deploys only the selected environment. Automatic Website runs target dev only; no automatic test-to-prod promotion occurs. Local commits must be pushed to GitHub before Actions can run.
+Website builds and deploys automatically to dev on every push to `master`. Terraform stays manual-only. Both pipelines retain manual environment selection. In **GitHub → Actions**, select **Terraform** or **Website**, click **Run workflow**, choose branch `master`, select `dev` or `prod`, then click **Run workflow** again. Each run deploys only the selected environment. Automatic Website runs target dev only; no automatic dev-to-prod promotion occurs. Local commits must be pushed to GitHub before Actions can run.
 
 | Pipeline | Behavior |
 | --- | --- |
@@ -100,19 +98,19 @@ Website builds and deploys automatically to dev on every push to `master`. Terra
 
 ### First deployment through Actions
 
-1. Create GitHub environments `dev`, `test`, and `prod` under Settings → Environments. Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to each environment's secrets. `AWS_SESSION_TOKEN` is optional for temporary credentials. Codespaces secrets are separate.
+1. Create GitHub environments `dev` and `prod` under Settings → Environments. Add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to each environment's secrets. `AWS_SESSION_TOKEN` is optional for temporary credentials. Codespaces secrets are separate.
 2. Run **Terraform** for the desired environment and wait for completion.
 3. Run **Website** for the same environment and desired commit on `master`.
 
 The workflow files must be pushed to GitHub's default branch before the new controls appear. Local workflow edits do not activate remote automation until pushed. The first portfolio draft is deployed separately using the shared AWS scripts; see the deployment record.
 
-Both workflows share a concurrency group per environment, preventing infrastructure/content releases from overlapping for the same target. Different environments can run independently. GitHub may replace older pending runs; this is not a FIFO queue. When changes depend on infrastructure, run Terraform before Website. Testing a revision in test before manually selecting prod remains recommended, but is not enforced by a promotion job.
+Both workflows share a concurrency group per environment, preventing infrastructure/content releases from overlapping for the same target. Different environments can run independently. GitHub may replace older pending runs; this is not a FIFO queue. When changes depend on infrastructure, run Terraform before Website. Verifying a revision in dev before manually selecting prod remains recommended, but is not enforced by a promotion job.
 
 Configuration targets account `210006516097`, region `ap-southeast-2`. The existing shared backend is reused with separate state keys. See [pipeline instructions](.github/workflows/README.md) and [Terraform permissions](terraform/README.md).
 
 ## Teardown
 
-Run `./scripts/destroy_environment.sh dev` (or `test` / `prod`) to remove one website stack. Confirm with `DESTROY <environment>`. This permanently deletes the selected site and all its S3 object versions while preserving the shared backend. See [script instructions](scripts/README.md#destroy-an-environment).
+Run `./scripts/destroy_environment.sh dev` (or `prod`) to remove one website stack. Confirm with `DESTROY <environment>`. This permanently deletes the selected site and all its S3 object versions while preserving the shared backend. See [script instructions](scripts/README.md#destroy-an-environment).
 
 ## Development conventions
 

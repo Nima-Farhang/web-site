@@ -2,6 +2,8 @@
 
 ## Status
 
+Environment selection superseded by [0013](0013-retire-test-environment.md); only dev and prod remain supported. Other decisions below retain their existing status.
+
 Accepted
 
 ## Recorded

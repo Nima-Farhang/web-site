@@ -2,6 +2,8 @@
 
 ## Status
 
+Environment selection superseded by [0013](0013-retire-test-environment.md); only dev and prod remain supported. Other decisions below retain their existing status.
+
 Accepted; replaces the Website trigger rule in [0010](0010-manual-environment-deployments.md). Terraform's manual-only deployment rule remains in effect.
 
 ## Recorded

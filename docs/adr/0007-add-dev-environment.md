@@ -2,6 +2,8 @@
 
 ## Status
 
+Environment selection superseded by [0013](0013-retire-test-environment.md); only dev and prod remain supported. Other decisions below retain their existing status.
+
 Superseded by [0010](0010-manual-environment-deployments.md) for deployment triggers and promotion; dev/test/prod separation remains. Originally accepted; supersedes [0004](0004-environments-and-delivery.md).
 
 ## Recorded

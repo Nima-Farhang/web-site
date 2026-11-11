@@ -5,7 +5,7 @@ The root [README](../README.md) introduces the project and setup. These document
 | Document | Purpose |
 | --- | --- |
 | [Architecture](architecture.md) | Application layers, AWS components, and ownership |
-| [Environment strategy](environment-strategy.md) | Dev/test/prod separation and promotion |
+| [Environment strategy](environment-strategy.md) | Dev/prod separation and promotion |
 | [Security model](security-model.md) | Credentials, private hosting, and state boundaries |
 | [Development standards](standards.md) | Coding, naming, commenting, scripts, and formatting |
 | [Development workflow](development-workflow.md) | Recording user decisions, validation, and commits |

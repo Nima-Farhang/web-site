@@ -49,6 +49,6 @@ Document setup and operational commands in the nearest README or command guide. 
 
 ## Scripts and checks
 
-Use executable Bash entry points with `set -euo pipefail`, paths resolved from the script location, quoted expansions, and clear errors. Accept the environment as the first argument with `ENVIRONMENT` as fallback, and reject anything except `dev`, `test`, or `prod` before invoking tools. Keep secrets out of output. Reuse the same entry points in CI and locally.
+Use executable Bash entry points with `set -euo pipefail`, paths resolved from the script location, quoted expansions, and clear errors. Accept the environment as the first argument with `ENVIRONMENT` as fallback, and reject anything except `dev` or `prod` before invoking tools. Keep secrets out of output. Reuse the same entry points in CI and locally.
 
 Run checks appropriate to the change. Verify meaningful behavior and failure boundaries; avoid tests that only restate an implementation. Commit completed changes following the [development workflow](development-workflow.md).

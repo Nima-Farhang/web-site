@@ -1,5 +1,7 @@
 # Verified deployments
 
+Current environment policy: only dev and prod are supported under [ADR 0013](adr/0013-retire-test-environment.md). Entries below retain historical deployment evidence; references to the retired target do not authorize redeployment.
+
 Deployment results are recorded after live verification. Infrastructure creation and website content deployment are separate operations.
 
 ## All-environment teardown — 2026-11-11
@@ -80,3 +82,11 @@ The script uploaded assets before HTML, completed CloudFront invalidation, and b
 No Terraform apply or new infrastructure was needed. Test and prod remain destroyed; domain DNS, ACM restrictions, and www.farhang.io were not changed.
 
 Website automation is configured in the local repository to build and deploy dev on every push to master, while retaining manual target selection. Terraform stays manual-only. The initial draft was deployed directly through the shared scripts, not through an Actions run. The commits have not been pushed by this task, so the new automatic trigger becomes active only when pushed to GitHub; the GitHub dev environment must contain its AWS secrets. See [ADR 0012](adr/0012-first-portfolio-and-automatic-dev-delivery.md).
+
+## Retire test — 2026-11-12
+
+At the user's request, ran `scripts/destroy_environment.sh test` with the exact `DESTROY test` confirmation in account `210006516097` as `arn:aws:iam::210006516097:user/terraform`. The script applied its checked bucket-deletion preparation and saved destroy plan, completing successfully with eight resources destroyed.
+
+Verified the retired environment's remote Terraform state listing is empty. AWS returned 404 for bucket `personal-website-test-210006516097`, NoSuchDistribution for distribution `EUX0KTKJ6VE01`, and NoSuchOriginAccessControl for access control `E1WDFXBNWM2SPK`. Bucket deletion includes all site object versions and delete markers. The shared backend remains preserved; dev and prod were not deployment targets during this task.
+
+Removed the retired target from both workflow dropdowns, Terraform inputs and environment validation, operational scripts, and current guides. Only dev and prod remain supported under [ADR 0013](adr/0013-retire-test-environment.md). Historical deployment entries and superseded ADR text remain as evidence. Workflow changes are local until pushed; no push was performed.

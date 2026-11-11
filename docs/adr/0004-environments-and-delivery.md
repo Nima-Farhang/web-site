@@ -2,7 +2,7 @@
 
 ## Status
 
-Superseded by [0007 — Add dev environment](0007-add-dev-environment.md). The original two-environment decision is preserved below; test-before-prod CI promotion remains in effect.
+Superseded by [0007 — Add dev environment](0007-add-dev-environment.md). The original two-environment decision is preserved below; subsequent delivery and environment decisions are recorded through [0013](0013-retire-test-environment.md).
 
 ## Recorded
 

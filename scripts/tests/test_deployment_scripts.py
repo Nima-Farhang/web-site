@@ -21,7 +21,7 @@ class DeploymentScriptsTest(unittest.TestCase):
         build.mkdir(parents=True)
         (build / 'index.html').write_text('<html>fixture</html>')
         (build / 'release.json').write_text('{"commit":"fixture"}')
-        for environment in ('dev', 'test', 'prod'):
+        for environment in ('dev', 'prod'):
             variables = self.repo / 'terraform/environments' / f'{environment}.tfvars'
             variables.parent.mkdir(parents=True, exist_ok=True)
             variables.write_text(f'environment = "{environment}"')
@@ -74,6 +74,13 @@ if name == 'curl':
         self.assertNotEqual(self.run_script('deploy_environment.sh', 'staging').returncode, 0)
         self.assertEqual(self.calls(), [])
 
+    def test_retired_environment_cannot_invoke_tools(self):
+        for script in ('deploy_environment.sh', 'deploy_website.sh', 'destroy_environment.sh'):
+            with self.subTest(script=script):
+                result = self.run_script(script, 'test', stdin='DESTROY test\n')
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual(self.calls(), [])
+
     def test_dev_uses_separate_state_configuration(self):
         result = self.run_script('deploy_environment.sh', 'dev')
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -85,7 +92,7 @@ if name == 'curl':
         self.assertTrue(plan['data_dir'].endswith('/.terraform/dev'))
 
     def test_failed_plan_cannot_apply(self):
-        self.assertNotEqual(self.run_script('deploy_environment.sh', 'test', FAIL_PLAN='1').returncode, 0)
+        self.assertNotEqual(self.run_script('deploy_environment.sh', 'dev', FAIL_PLAN='1').returncode, 0)
         self.assertFalse(any('apply' in call['args'] for call in self.calls()))
 
     def test_applies_exact_saved_plan_and_isolates_environment(self):
@@ -150,12 +157,12 @@ if name == 'curl':
         self.assertIn('-destroy', plans[0])
 
     def test_wrong_deployed_release_fails_verification(self):
-        result = self.run_script('deploy_website.sh', 'test', WRONG_RELEASE='1')
+        result = self.run_script('deploy_website.sh', 'dev', WRONG_RELEASE='1')
         self.assertNotEqual(result.returncode, 0)
-        self.assertNotIn('Verified test', result.stdout)
+        self.assertNotIn('Verified dev', result.stdout)
 
     def test_assets_precede_html_and_invalidation_precedes_verification(self):
-        result = self.run_script('deploy_website.sh', 'test')
+        result = self.run_script('deploy_website.sh', 'dev')
         self.assertEqual(result.returncode, 0, result.stderr)
         calls = self.calls()
         uploads = [call for call in calls if call['tool'] == 'aws' and call['args'][0] == 's3']
@@ -164,7 +171,7 @@ if name == 'curl':
         wait = next(i for i, call in enumerate(calls) if 'invalidation-completed' in call['args'])
         first_fetch = next(i for i, call in enumerate(calls) if call['tool'] == 'curl')
         self.assertLess(wait, first_fetch)
-        self.assertIn('Verified test', result.stdout)
+        self.assertIn('Verified dev', result.stdout)
 
 
 if __name__ == '__main__':

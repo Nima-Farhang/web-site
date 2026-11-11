@@ -12,7 +12,6 @@ on:
         default: dev
         options:
           - dev
-          - test
           - prod
 
 permissions:

@@ -2,6 +2,28 @@
 
 Deployment results are recorded after live verification. Infrastructure creation and website content deployment are separate operations.
 
+## All-environment teardown — 2026-11-11
+
+The user requested destruction of all infrastructure owned by this repository in dev, test, and prod using `scripts/destroy_environment.sh`. This operational request uses the existing teardown decision in [ADR 0008](adr/0008-environment-teardown.md); it does not change the environment or delivery design.
+
+Verified the active identity as `arn:aws:iam::210006516097:user/terraform`. Before teardown, GitHub Actions had no queued or in-progress runs. Remote state contained eight dev resources, eight test resources, and six resources from the partial prod deployment, all within the website stack. No ACM certificate was recorded in any state. Independent ACM inventory in us-east-1 was denied by the existing region restriction policy.
+
+The container's Python installation lacked its standard library, preventing the script's JSON plan guard from running. Installed the missing Python 3.12 standard library in the running container, verified the JSON import, and passed all 13 deployment-script tests and Bash syntax checks before invoking teardown. No destroy-script changes were needed.
+
+Ran the existing destroy script sequentially for dev, test, and prod, supplying each exact `DESTROY <environment>` confirmation under the user's explicit authorization. Each run applied its checked bucket-preparation plan and saved destroy plan, then exited successfully.
+
+| Environment | Resources destroyed | Removed bucket | Removed CloudFront distribution | Removed origin access control |
+| --- | --- | --- | --- | --- |
+| Dev | 8 | `personal-website-dev-210006516097` | `E2H4XFCUBL35SI` | `E1P7NMLWP4BX8E` |
+| Test | 8 | `personal-website-test-210006516097` | `E1MJOF11EMF5QH` | `ETM3BD8Q9IUTU` |
+| Prod | 6 | `personal-website-prod-210006516097` | None in state | `E3VJK5M25QSJFT` |
+
+All three Terraform state listings were empty afterward. AWS returned 404 for all three website buckets, NoSuchDistribution for both distribution IDs, and NoSuchOriginAccessControl for all three origin access controls. Final inventories found no remaining `personal-website-` buckets, distributions, or origin access controls. Successful bucket deletion includes removal of website object versions and delete markers.
+
+The shared bucket `nima-terraform-state-210006516097` remains accessible in ap-southeast-2, and `terraform-state-lock` remains ACTIVE. Remote state and its history were preserved. No IAM or external DNS changes were made. ACM absence outside Terraform state could not be independently verified because of the inventory denial noted above.
+
+All website environments are now destroyed; the deployment entries below are historical. Infrastructure must be explicitly redeployed before a website-content deployment can succeed. Existing workflow configuration remains unchanged: master pushes trigger the dev content workflow, but that workflow does not provision the missing infrastructure. This task does not push commits or trigger a deployment.
+
 ## Dev — 2026-11-10
 
 Deployed at the user's request after the decision to add dev as a third environment ([ADR 0007](adr/0007-add-dev-environment.md)).

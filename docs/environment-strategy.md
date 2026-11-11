@@ -1,6 +1,6 @@
 # Environment strategy
 
-There are two AWS environments: `dev` and `prod`. Website automatically targets dev on master pushes; both workflows also allow a manual selection of exactly one target per run. The Codespace provides local development separately. One developer works directly on `master`.
+There are two AWS environments: `dev` and `prod`. Both workflows require manual selection of exactly one target per run. The Codespace provides local development separately. One developer works directly on `master`.
 
 | Setting | Dev | Prod |
 | --- | --- | --- |
@@ -14,7 +14,7 @@ Both environments currently use account `210006516097` in `ap-southeast-2`, with
 
 State is separate within the existing shared bucket `nima-terraform-state-210006516097`; locks use `terraform-state-lock`. Do not reuse the sample data product's Snowflake state keys.
 
-Terraform remains manual-only. Website targets dev automatically on every master push and retains manual environment selection. There is no automatic promotion. Verify a revision in dev before selecting prod. GitHub environment protection rules are optional. The website builds and verifies an artifact within one run; separate environment runs do not share a guaranteed identical artifact.
+Terraform and Website are manual-only with environment selection. There is no automatic promotion. Verify a revision in dev before selecting prod. GitHub environment protection rules are optional. The website builds and verifies an artifact within one run; separate environment runs do not share a guaranteed identical artifact.
 
 The shared concurrency group per environment prevents overlapping infrastructure/content releases to that target. Different environments can run independently. GitHub may replace pending runs, so it is not a FIFO queue. For first deployment or infrastructure-dependent content changes, complete Terraform before running Website.
 

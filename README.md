@@ -18,7 +18,7 @@ The repository includes a minimal React frontend, Terraform hosting using an exi
 Browser → HTTPS / CloudFront → private S3 website bucket
 
 GitHub Actions
-├── Website pipeline: master push → build → deploy and verify dev
+├── Website pipeline: manual dev/prod selection → build → deploy and verify target
 │                     manual run → deploy selected target
 └── Terraform pipeline: select environment → validate → plan/apply target
 ```
@@ -89,7 +89,7 @@ Do not commit credentials or put them in the Docker image. A separate AWS accoun
 
 Work directly on `master` as the sole developer. There are two AWS environments: `dev` and `prod`; the Codespace provides local development separately.
 
-Website builds and deploys automatically to dev on every push to `master`. Terraform stays manual-only. Both pipelines retain manual environment selection. In **GitHub → Actions**, select **Terraform** or **Website**, click **Run workflow**, choose branch `master`, select `dev` or `prod`, then click **Run workflow** again. Each run deploys only the selected environment. Automatic Website runs target dev only; no automatic dev-to-prod promotion occurs. Local commits must be pushed to GitHub before Actions can run.
+Website and Terraform run only through manual environment selection. In **GitHub → Actions**, select **Terraform** or **Website**, click **Run workflow**, choose branch `master`, select `dev` or `prod`, then click **Run workflow** again. Each run deploys only the selected environment. Pushes do not trigger deployments; no automatic promotion occurs. Local commits must be pushed to GitHub before Actions can run.
 
 | Pipeline | Behavior |
 | --- | --- |

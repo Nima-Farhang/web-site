@@ -17,5 +17,6 @@ Use [the template](template.md) for new records. Number records sequentially wit
 | [0009](0009-minimal-portfolio-infrastructure.md) | Accepted | Minimal portfolio infrastructure; no NAT gateways |
 | [0010](0010-manual-environment-deployments.md) | Website trigger superseded by 0012; Terraform accepted; environment selection superseded by 0013 | Manual environment deployments |
 | [0011](0011-www-domain-on-prod.md) | Accepted; environment selection superseded by 0013 | www.farhang.io on prod with Squarespace DNS |
-| [0012](0012-first-portfolio-and-automatic-dev-delivery.md) | Accepted; environment selection superseded by 0013 | First portfolio and automatic dev website delivery |
-| [0013](0013-retire-test-environment.md) | Accepted | Retire test; support dev and prod only |
+| [0012](0012-first-portfolio-and-automatic-dev-delivery.md) | Website trigger superseded by 0014; environment selection superseded by 0013 | First portfolio and automatic dev website delivery |
+| [0013](0013-retire-test-environment.md) | Accepted; Website trigger superseded by 0014 | Retire test; support dev and prod only |
+| [0014](0014-manual-only-website-delivery.md) | Accepted | Manual-only Website delivery |

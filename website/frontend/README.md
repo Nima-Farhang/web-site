@@ -21,6 +21,6 @@ See [content sources](../../docs/portfolio-content.md) and [third-party notices]
 
 ## Delivery
 
-Every push to master builds and deploys Website to dev. Manual dispatch still allows selecting dev or prod. The infrastructure workflow remains manual. A local commit must reach GitHub to trigger Actions; direct AWS deployments use `./scripts/deploy_website.sh dev` after building.
+Website and infrastructure workflows run only through manual dispatch with dev or prod selection. Push commits to GitHub before manually running Actions for the desired revision; direct AWS deployments use `./scripts/deploy_website.sh dev` after building.
 
 No router, dynamic repository API, backend, or customer-data collection is added. All bundled content is public. The www.farhang.io production-domain setup is independent of dev's CloudFront URL.

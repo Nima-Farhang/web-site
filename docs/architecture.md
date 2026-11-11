@@ -37,6 +37,6 @@ Terraform owns hosting resources; the website pipeline owns uploaded site object
 
 ## Delivery
 
-Website runs automatically on master pushes to dev and also offers manual dev/prod selection. Terraform starts only through manual environment selection. Website checks types, builds an artifact, deploys it to the selected target, and verifies its HTML and release marker. Terraform validates and applies a saved plan for the selected target. There is no automatic cross-environment promotion or infrastructure push trigger. Both workflows share a concurrency group per environment; run infrastructure first when content depends on it.
+Website and Terraform start only through manual dev/prod selection. Website checks types, builds an artifact, deploys it to the selected target, and verifies its HTML and release marker. Terraform validates and applies a saved plan for the selected target. There is no automatic cross-environment promotion or infrastructure push trigger. Both workflows share a concurrency group per environment; run infrastructure first when content depends on it.
 
 See [environment strategy](environment-strategy.md), [pipeline operations](../.github/workflows/README.md), and the [accepted decisions](adr/README.md).

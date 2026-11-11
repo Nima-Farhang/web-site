@@ -2,6 +2,8 @@
 
 ## Status
 
+Website trigger superseded by [0014](0014-manual-only-website-delivery.md); Website delivery is manual-only.
+
 Accepted
 
 ## Recorded

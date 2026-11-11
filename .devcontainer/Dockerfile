@@ -4,7 +4,7 @@ ARG TERRAFORM_VERSION=1.9.6
 ARG TARGETARCH
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates curl unzip git ripgrep shellcheck \
+    ca-certificates curl unzip git git-lfs ripgrep shellcheck \
     && rm -rf /var/lib/apt/lists/*
 
 # Verify Terraform before installing it; keep the version aligned with the reference projects.

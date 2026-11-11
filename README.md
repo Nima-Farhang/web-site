@@ -54,11 +54,23 @@ terraform/                  Shared Terraform root configuration
 ## Start in GitHub Codespaces
 
 1. Create a Codespace for this repository, or run **Codespaces: Rebuild Container** in an existing Codespace.
-2. The container provides Node.js 22 with npm, Terraform 1.9.6, AWS CLI v2, Git, ripgrep, and ShellCheck.
+2. The container provides Node.js 22 with npm, Terraform 1.9.6, AWS CLI v2, Git with Git LFS, ripgrep, and ShellCheck.
 3. Initialization configures AWS if credentials are available. Frontend dependencies are installed with `npm ci`.
 4. Follow [website/README.md](website/README.md) for the application layout and [website/frontend/README.md](website/frontend/README.md) for frontend commands.
 
 Run `./scripts/dev_website.sh` to start Vite on the forwarded port `5173`. Run `./scripts/build_website.sh` to type-check and build the frontend.
+
+### Git LFS push errors
+
+The devcontainer installs Git LFS for the repository's existing Git hooks. If an older Codespace reports that `git-lfs` was not found when committing or pushing, run:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y --no-install-recommends git-lfs
+git lfs version
+```
+
+Then retry the Git operation. Rebuild the container to use the updated image setup. Preserve the Git LFS hooks; no hook removal or LFS tracking changes are needed.
 
 ## AWS setup
 

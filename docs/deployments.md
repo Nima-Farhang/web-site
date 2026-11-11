@@ -4,6 +4,8 @@ Current environment policy: only dev and prod are supported under [ADR 0013](adr
 
 Deployment results are recorded after live verification. Infrastructure creation and website content deployment are separate operations.
 
+Current dev URL (verified 2026-11-12): [https://d201bqiuvyrm1u.cloudfront.net](https://d201bqiuvyrm1u.cloudfront.net). AWS lists this distribution as enabled and deployed with comment `personal-website-dev`; an HTTPS request returned HTTP 200. Older URLs in the historical entries below are no longer current.
+
 ## All-environment teardown — 2026-11-11
 
 The user requested destruction of all infrastructure owned by this repository in dev, test, and prod using `scripts/destroy_environment.sh`. This operational request uses the existing teardown decision in [ADR 0008](adr/0008-environment-teardown.md); it does not change the environment or delivery design.

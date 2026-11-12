@@ -11,8 +11,10 @@ Run these from the repository root. The build installs locked dependencies, chec
 
 ## Editing
 
-- `src/App.tsx`: page shell, header navigation, and footer.
-- `src/components/MainContent.tsx`: introduction, portfolio sections, and contact details. The main content is kept separate from `App.tsx` at the user’s request.
+- `src/App.tsx`: page shell and skip link, composing the header, main content, and footer.
+- `src/components/Header.tsx`: branding and header navigation.
+- `src/components/Footer.tsx`: footer branding and back-to-top link.
+- `src/components/MainContent.tsx`: introduction, portfolio sections, and contact details. The main content, header, and footer are kept in separate components at the user’s request.
 - `src/content/portfolio.ts`: project summaries, technologies, and public repository links.
 - `src/components/`: shared project cards and icons.
 - `src/styles/reference-bootstrap.css`: adapted Lux template from the supplied reference; retain license attribution.

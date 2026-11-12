@@ -29,3 +29,11 @@ The user requested separate page sections and component subfolders to make the p
 Website and infrastructure workflows run only through manual dispatch with dev or prod selection. Push commits to GitHub before manually running Actions for the desired revision; direct AWS deployments use `./scripts/deploy_website.sh dev` after building.
 
 No router, dynamic repository API, backend, or customer-data collection is added. All bundled content is public. The www.farhang.io production-domain setup is independent of dev's CloudFront URL.
+
+## Cross-page section links
+
+Header links such as `/#work` load the home page from Contact and then jump to
+its section. `App.tsx` restores the URL fragment after React mounts, because the
+initial HTML has no section targets yet. It also handles fragment changes.
+Keep this behavior when changing the page shell so direct section URLs and
+navigation from Contact continue to land on the requested section.

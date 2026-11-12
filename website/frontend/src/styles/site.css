@@ -91,6 +91,20 @@ h1, h2, h3 { color: var(--navy); text-transform: none; letter-spacing: -.035em; 
 .portfolio-note > p:not(.eyebrow) { color: #526a66; font-size: .81rem; line-height: 1.9; max-width: 360px; }
 .portfolio-note a { display: flex; align-items: center; gap: 16px; font-size: .72rem; font-weight: 650; margin-top: 27px; }
 .portfolio-note a svg { width: 18px; }
+.architecture-section { border-top: 1px solid var(--line); background: #f0f6f4; scroll-margin-top: 30px; }
+.architecture-inner { padding-top: 64px; padding-bottom: 64px; }
+.architecture-intro { max-width: 760px; font-size: .9rem; line-height: 1.85; color: var(--muted); }
+.architecture-flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); list-style: none; padding: 0; margin: 32px 0; border: 1px solid #a5bfda42; background: var(--navy); color: #d8e4ee; }
+.architecture-flow li { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 27px 32px; }
+.architecture-flow li + li { border-left: 1px solid #ffffff30; }
+.architecture-flow li + li::before { content: '→'; position: absolute; left: -10px; top: 50%; transform: translateY(-50%); background: var(--navy); color: var(--teal); font-size: 1.2rem; }
+.architecture-step { color: #a8dcd2; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; }
+.architecture-flow strong { font-size: 1.1rem; font-weight: 650; color: #fff; }
+.architecture-flow li > span:last-child { font-size: .76rem; line-height: 1.8; }
+.architecture-details { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.architecture-details h3 { font-size: 1rem; font-weight: 650; margin-bottom: 10px; }
+.architecture-details p { font-size: .8rem; line-height: 1.85; color: var(--muted); }
+.architecture-links { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 30px; }
 .closing-section { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--paper); }
 .closing-inner { padding-top: 49px; padding-bottom: 49px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
 .closing-inner h2 { font-size: 1.75rem; margin-top: 13px; font-weight: 650; }
@@ -139,6 +153,11 @@ h1, h2, h3 { color: var(--navy); text-transform: none; letter-spacing: -.035em; 
   .project-grid { grid-template-columns: 1fr; gap: 17px; }
   .project-card { padding: 25px; }
   .portfolio-note { padding: 30px; }
+  .architecture-inner { padding-top: 44px; padding-bottom: 44px; }
+  .architecture-flow, .architecture-details { grid-template-columns: 1fr; }
+  .architecture-flow li + li { border-left: 0; border-top: 1px solid #ffffff30; }
+  .architecture-flow li + li::before { content: '↓'; left: 32px; top: 0; }
+  .architecture-details { gap: 22px; }
   .closing-inner { flex-direction: column; align-items: flex-start; padding-top: 36px; padding-bottom: 36px; gap: 24px; }
   .closing-inner h2 { font-size: 1.6rem; }
   .site-footer { flex-wrap: wrap; padding-top: 25px; padding-bottom: 25px; gap: 17px; }

@@ -12,15 +12,16 @@ Run these from the repository root. The build installs locked dependencies, chec
 ## Editing
 
 - `src/App.tsx`: page shell and skip link, composing the header, main content, and footer.
-- `src/components/Header.tsx`: branding and header navigation.
-- `src/components/Footer.tsx`: footer branding and back-to-top link.
-- `src/components/MainContent.tsx`: introduction, portfolio sections, and contact details. The main content, header, and footer are kept in separate components at the user’s request.
+- `src/components/layout/`: header, footer, and `MainContent.tsx`, which lists the page sections in display order.
+- `src/components/sections/`: hero, focus band, work, closing, and contact sections, plus the project card used by the work section.
+- `src/components/shared/`: icons reused across sections and layout components.
 - `src/content/portfolio.ts`: project summaries, technologies, and public repository links.
-- `src/components/`: shared project cards and icons.
 - `src/styles/reference-bootstrap.css`: adapted Lux template from the supplied reference; retain license attribution.
 - `src/styles/site.css`: local palette, responsive layout, and accessibility styles.
 
 See [content sources](../../docs/portfolio-content.md) and [third-party notices](THIRD_PARTY_NOTICES.md). The site uses system-font fallbacks and inline graphics rather than remote fonts or imagery.
+
+The user requested separate page sections and component subfolders to make the page easier to understand. Keep each section’s markup and imports together, format nested JSX across lines, and keep `MainContent.tsx` as the page outline.
 
 ## Delivery
 

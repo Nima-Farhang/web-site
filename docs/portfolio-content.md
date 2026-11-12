@@ -16,6 +16,8 @@ Sources:
 
 Keep personal claims grounded in user-provided details and public work. Job titles, employers, years of experience, testimonials, and contact information have not been invented.
 
+The user supplied and approved publishing `nima@farhang.io` and `0064211229743` when requesting a Contact me button. The introduction links to a contact section with email and telephone links; the phone is displayed as `+64 21 122 9743` and uses `tel:+64211229743`. Contact links open the visitor's email or calling application; the website has no contact form or message storage. Edit these details in `website/frontend/src/App.tsx`.
+
 ## Visual source
 
 The supplied Full-Stack-WebApp-Demo uses a customized Bootswatch Lux stylesheet with navy `#1A3356`, teal `#5DB7A8`, gray `#9D9E9F`, and white. The local copy retains the CSS template and license headers. `site.css` supplies the portfolio-specific layout, responsive behavior, contrast adjustments, keyboard focus states, and reduced-motion behavior. The original external font import is removed; system fallbacks avoid runtime font-service dependencies. See [third-party notices](../website/frontend/THIRD_PARTY_NOTICES.md).

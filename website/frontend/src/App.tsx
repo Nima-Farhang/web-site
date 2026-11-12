@@ -26,6 +26,7 @@ export function App() {
             <p className="hero-detail">This is where I share what I’m building, the decisions behind it, and the code that brings it together.</p>
             <div className="hero-actions">
               <a className="btn btn-primary" href="#work">Explore my work <span aria-hidden="true">↓</span></a>
+              <a className="btn btn-outline-primary" href="#contact">Contact me</a>
               <a className="quiet-link" href={githubProfile} target="_blank" rel="noopener noreferrer"><Icon name="github" /> Find me on GitHub</a>
             </div>
           </div>
@@ -55,6 +56,16 @@ export function App() {
         </section>
 
         <section className="closing-section" aria-labelledby="closing-heading"><div className="container closing-inner"><div><p className="eyebrow">Keep exploring</p><h2 id="closing-heading">The best introduction is the work.</h2><p>Take a look around the repositories. Start with a README, then follow the code.</p></div><a className="btn btn-outline-primary" href={githubProfile} target="_blank" rel="noopener noreferrer"><Icon name="github" /> Visit my GitHub <Icon name="arrow" /></a></div></section>
+        <section className="contact-section container" id="contact" aria-labelledby="contact-heading">
+          <p className="eyebrow"><span className="teal-line" /> Get in touch</p>
+          <h2 id="contact-heading">Contact me</h2>
+          <p>Have a question about my work? Send me an email or give me a call.</p>
+          <address className="contact-details">
+            <a className="btn btn-primary" href="mailto:nima@farhang.io">Email me</a>
+            <a href="mailto:nima@farhang.io">nima@farhang.io</a>
+            <a href="tel:+64211229743">+64 21 122 9743</a>
+          </address>
+        </section>
       </main>
 
       <footer className="site-footer container"><a className="footer-name" href="#about">Nima Farhang<span>.</span></a><p>Personal projects. Practical ideas. Shared openly.</p><a href="#about">Back to top <span aria-hidden="true">↑</span></a></footer>

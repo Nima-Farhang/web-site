@@ -4,7 +4,7 @@ The first draft is one static page: a personal introduction, a visual summary of
 
 ## Content ownership
 
-Edit project names, summaries, tags, and public repository slugs in `website/frontend/src/content/portfolio.ts`. Edit the introduction in `src/App.tsx`. Summaries were paraphrased from the public READMEs on 2026-11-10; planned features are not presented as completed functionality. Only repositories confirmed public are featured. Do not add private repository details to the deployed bundle.
+Edit project names, summaries, tags, and public repository slugs in `website/frontend/src/content/portfolio.ts`. Edit the introduction in `src/components/MainContent.tsx`. Summaries were paraphrased from the public READMEs on 2026-11-10; planned features are not presented as completed functionality. Only repositories confirmed public are featured. Do not add private repository details to the deployed bundle.
 
 Sources:
 
@@ -16,7 +16,7 @@ Sources:
 
 Keep personal claims grounded in user-provided details and public work. Job titles, employers, years of experience, testimonials, and contact information have not been invented.
 
-The user supplied and approved publishing `nima@farhang.io` and `0064211229743` when requesting a Contact me button. The introduction links to a contact section with email and telephone links; the phone is displayed as `+64 21 122 9743` and uses `tel:+64211229743`. Contact links open the visitor's email or calling application; the website has no contact form or message storage. Edit these details in `website/frontend/src/App.tsx`.
+The user supplied and approved publishing `nima@farhang.io` and `0064211229743` when requesting a Contact me button. The introduction links to a contact section with email and telephone links; the phone is displayed as `+64 21 122 9743` and uses `tel:+64211229743`. Contact links open the visitor's email or calling application; the website has no contact form or message storage. Edit these details in `website/frontend/src/components/MainContent.tsx`.
 
 ## Visual source
 

@@ -20,3 +20,4 @@ Use [the template](template.md) for new records. Number records sequentially wit
 | [0012](0012-first-portfolio-and-automatic-dev-delivery.md) | Website trigger superseded by 0014; environment selection superseded by 0013 | First portfolio and automatic dev website delivery |
 | [0013](0013-retire-test-environment.md) | Accepted; Website trigger superseded by 0014 | Retire test; support dev and prod only |
 | [0014](0014-manual-only-website-delivery.md) | Accepted | Manual-only Website delivery |
+| [0015](0015-static-contact-page.md) | Accepted | Separate static Contact page |

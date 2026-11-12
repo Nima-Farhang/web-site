@@ -1,6 +1,6 @@
 # Frontend
 
-The initial portfolio is one static React and TypeScript page built with Vite. It introduces Nima Farhang and showcases five public repositories with summaries grounded in their READMEs.
+The initial portfolio is a static React and TypeScript home page and Contact page built with Vite. It introduces Nima Farhang and showcases five public repositories with summaries grounded in their READMEs.
 
 ```bash
 ./scripts/build_website.sh
@@ -11,9 +11,10 @@ Run these from the repository root. The build installs locked dependencies, chec
 
 ## Editing
 
-- `src/App.tsx`: page shell and skip link, composing the header, main content, and footer.
+- `index.html` and `contact.html`: static entry pages, built together by `vite.config.ts`.
+- `src/App.tsx`: selects the Contact content for `/contact.html`; page shell and skip link, composing the header, main content, and footer.
 - `src/components/layout/`: header, footer, and `MainContent.tsx`, which lists the page sections in display order.
-- `src/components/sections/`: hero, focus band, work, closing, and contact sections, plus the project card used by the work section.
+- `src/components/sections/`: hero, focus band, work, architecture, closing, and contact sections, plus the project card used by the work section.
 - `src/components/shared/`: icons reused across sections and layout components.
 - `src/content/portfolio.ts`: project summaries, technologies, and public repository links.
 - `src/styles/reference-bootstrap.css`: adapted Lux template from the supplied reference; retain license attribution.

@@ -12,9 +12,13 @@ WEBSITE_URL="$(terraform -chdir="${TERRAFORM_DIR}" output -raw website_url)"
 
 # Publish immutable assets before HTML. Keep old assets so cached pages still work.
 aws s3 sync "${BUILD_DIR}/" "s3://${WEBSITE_BUCKET}/" \
-  --exclude index.html --exclude release.json --cache-control 'public,max-age=31536000,immutable' --only-show-errors
+  --exclude index.html --exclude contact.html --exclude release.json --cache-control 'public,max-age=31536000,immutable' --only-show-errors
 aws s3 cp "${BUILD_DIR}/index.html" "s3://${WEBSITE_BUCKET}/index.html" \
   --content-type text/html --cache-control 'no-cache,no-store,must-revalidate' --only-show-errors
+if [[ -s "${BUILD_DIR}/contact.html" ]]; then
+  aws s3 cp "${BUILD_DIR}/contact.html" "s3://${WEBSITE_BUCKET}/contact.html" \
+    --content-type text/html --cache-control 'no-cache,no-store,must-revalidate' --only-show-errors
+fi
 aws s3 cp "${BUILD_DIR}/release.json" "s3://${WEBSITE_BUCKET}/release.json" \
   --content-type application/json --cache-control 'no-cache,no-store,must-revalidate' --only-show-errors
 INVALIDATION_ID="$(aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" \

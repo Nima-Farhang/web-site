@@ -1,6 +1,6 @@
 # Portfolio content and visual source
 
-The first draft is one static page: a personal introduction, a visual summary of the project themes, five public repository introductions, and GitHub links. Anchor links navigate within the page. There is no router, contact form, analytics integration, repository API call, or backend.
+The home page is static content: a personal introduction, a visual summary of the project themes, five public repository introductions, and GitHub links. Anchor links navigate within the page. A separate static `/contact.html` page holds the contact details. There is no router, contact form, analytics integration, repository API call, or backend.
 
 ## Content ownership
 
@@ -16,16 +16,18 @@ Sources:
 
 Keep personal claims grounded in user-provided details and public work. Job titles, employers, years of experience, testimonials, and contact information have not been invented.
 
-The user supplied and approved publishing `nima@farhang.io` and `0064211229743` when requesting a Contact me button. The introduction links to a contact section with email and telephone links; the phone is displayed as `+64 21 122 9743` and uses `tel:+64211229743`. Contact links open the visitor's email or calling application; the website has no contact form or message storage. Edit these details in `website/frontend/src/components/sections/ContactSection.tsx`.
+The user supplied and approved publishing `nima@farhang.io` and `0064211229743` when requesting a Contact me button. The header’s Contact me button links to `/contact.html`, which contains the email button and email and telephone links; the phone is displayed as `+64 21 122 9743` and uses `tel:+64211229743`. Contact links open the visitor's email or calling application; the website has no contact form or message storage. Edit these details in `website/frontend/src/components/sections/ContactSection.tsx`.
 
 ## Website architecture section
 
 The user requested a public explanation of the custom website and approved placing
-“How this website is built” after Selected work, before the closing and contact
-sections. `ArchitectureSection.tsx` presents React, TypeScript, Vite, Terraform,
+“How this website is built” after Selected work, before the closing
+section. `ArchitectureSection.tsx` presents React, TypeScript, Vite, Terraform,
 and manual GitHub Actions deployments to dev or prod. An ordered request diagram
 shows Visitor → CloudFront → private S3, stacking vertically on small screens.
-Links lead to the website repository and its architecture guide. This is static
+The hero’s “How this website is built” button uses the same primary style as
+“Explore my work” and links to this section. Contact content appears only on the
+Contact page, as requested by the user. Links lead to the website repository and its architecture guide. This is static
 portfolio content describing the existing system; it introduces no infrastructure.
 
 ## Visual source

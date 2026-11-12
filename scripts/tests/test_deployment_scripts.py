@@ -161,6 +161,21 @@ if name == 'curl':
         self.assertNotEqual(result.returncode, 0)
         self.assertNotIn('Verified dev', result.stdout)
 
+    def test_contact_page_uses_revalidation_instead_of_immutable_caching(self):
+        (self.repo / 'website/frontend/dist/contact.html').write_text('<html>Contact</html>')
+        result = self.run_script('deploy_website.sh', 'dev')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        uploads = [call['args'] for call in self.calls()
+                   if call['tool'] == 'aws' and call['args'][0] == 's3']
+        sync = uploads[0]
+        self.assertTrue(any(sync[i:i + 2] == ['--exclude', 'contact.html']
+                            for i in range(len(sync) - 1)))
+        contact = next(args for args in uploads
+                       if args[1] == 'cp' and args[2].endswith('/contact.html'))
+        self.assertEqual(contact[contact.index('--cache-control') + 1],
+                         'no-cache,no-store,must-revalidate')
+        self.assertEqual(contact[3], 's3://fixture-bucket/contact.html')
+
     def test_assets_precede_html_and_invalidation_precedes_verification(self):
         result = self.run_script('deploy_website.sh', 'dev')
         self.assertEqual(result.returncode, 0, result.stderr)

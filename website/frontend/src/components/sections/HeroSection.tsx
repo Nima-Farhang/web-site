@@ -33,8 +33,8 @@ export function HeroSection() {
           <a className="btn btn-primary" href="#work">
             Explore my work <span aria-hidden="true">↓</span>
           </a>
-          <a className="btn btn-outline-primary" href="#contact">
-            Contact me
+          <a className="btn btn-primary" href="#architecture">
+            How this website is built <span aria-hidden="true">↓</span>
           </a>
           <a
             className="quiet-link"

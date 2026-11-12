@@ -1,6 +1,6 @@
 # Architecture
 
-This repository owns one personal website introducing Nima Farhang, its hosting infrastructure, and its deployment automation. The frontend is a single-page portfolio introducing Nima and five public sample repositories. Terraform and workflows are implemented. See the [deployment record](deployments.md) for verified AWS deployments.
+This repository owns one personal website introducing Nima Farhang, its hosting infrastructure, and its deployment automation. The frontend is a static portfolio with a home page and a separate Contact page introducing Nima and five public sample repositories. Terraform and workflows are implemented. See the [deployment record](deployments.md) for verified AWS deployments.
 
 ## Scope boundary
 
@@ -18,6 +18,10 @@ Browser → HTTPS CloudFront distribution → private S3 bucket
 website/frontend/ → React + TypeScript + Vite → static dist/ artifact
 website/backend/  → reserved for future AWS Lambda processes
 ```
+
+Vite builds `index.html` and `contact.html` as explicit entry pages. The shared
+React shell selects contact content by pathname; no client router or CloudFront
+rewrite is needed. Both HTML files use revalidation cache headers on deployment.
 
 The initial site has no backend application or database. S3 is a regular private origin accessed through CloudFront origin access control. CloudFront redirects HTTP to HTTPS and uses its default hostname and certificate. Prod has optional ACM certificate and custom-hostname support for `www.farhang.io`, with DNS maintained at Squarespace. See [domain setup](domain-setup.md). Routing rewrites and Lambda services still require future decisions.
 

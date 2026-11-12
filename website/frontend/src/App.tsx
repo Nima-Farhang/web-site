@@ -1,5 +1,6 @@
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
+import { ContactSection } from './components/sections/ContactSection';
 import { MainContent } from './components/layout/MainContent';
 
 export function App() {
@@ -10,7 +11,13 @@ export function App() {
       </a>
       <Header />
 
-      <MainContent />
+      {window.location.pathname === '/contact.html' ? (
+        <main id="main-content" className="contact-page">
+          <ContactSection />
+        </main>
+      ) : (
+        <MainContent />
+      )}
 
       <Footer />
     </>

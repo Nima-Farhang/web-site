@@ -15,7 +15,7 @@ Use `./scripts/deploy_environment.sh dev` for manual AWS development checks. Bot
 
 `lib/environment.sh` shares path resolution and environment validation. Each deployed environment uses a separate `TF_DATA_DIR` under ignored `terraform/.terraform/`. This prevents switching dev/prod from reusing backend metadata or plan files. Scripts fail on errors and use Terraform's remote state lock with a five-minute lock timeout.
 
-Website deployment preserves existing assets for cached pages, uploads assets before HTML, waits for invalidation, and compares the deployed HTML and release marker against the artifact. Old S3 versions and assets are retained; lifecycle cleanup can be added when a retention policy is chosen. Failed verification fails the selected deployment but does not automatically roll back a partial deployment; rerun a known-good revision to restore it.
+Website deployment preserves existing assets for cached pages, uploads assets before HTML (including the separate `contact.html` page), waits for invalidation, and compares the deployed HTML and release marker against the artifact. Old S3 versions and assets are retained; lifecycle cleanup can be added when a retention policy is chosen. Failed verification fails the selected deployment but does not automatically roll back a partial deployment; rerun a known-good revision to restore it.
 
 Keep shell scripts focused and use strict Bash. Explain intent and operational choices in comments. Share these entry points between local development and CI, following the reference repositories.
 
